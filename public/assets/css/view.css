@@ -1,0 +1,74 @@
+html, body { height: 100%; overflow: hidden;}
+
+.weatherwidget-io-frame, .weatherwidget-io {
+
+    height:100% !important;
+}
+.marquee-parent {
+    position: relative;
+    width: 100%;
+    overflow: hidden; 
+    height: 65px;
+}
+.marquee-child {
+    display: block;
+    position: absolute;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 2.5em;
+    overflow: hidden;
+    animation: marquee 30s linear infinite; /* change 5s value to your desired speed */
+}
+.marquee-child:hover {
+    animation-play-state: paused;
+    cursor: pointer;
+}
+@keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -147px; /* same as your text width */
+    }
+}
+
+@keyframes aktiveSlide {
+    from {
+        margin-left: -400px;
+        opacity: 0;
+    }
+    to {
+        margin-left: 0;
+        opacity: 1;
+    }
+}
+
+
+
+.aktiveSlide {
+    display: block !important;
+    background-color: rgba(255,255,255,0.9);
+    animation-name: aktiveSlide;
+    animation-duration: 1.2s;
+}
+
+
+
+.mySlidesText {
+    overflow-y: hidden;
+}
+
+.mySlidesText-container {
+    background-color: rgba(255,255,255,0.95);
+    z-index:0;
+    overflow: hidden;
+    height:100%;
+}
+
+.mySlidesContainer {
+    display:none;
+}
+
+.slide-images {
+    display:none;
+}
