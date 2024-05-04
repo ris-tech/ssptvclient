@@ -1,17 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ViewTvController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\LocationController;
-use App\Http\Controllers\TvController;
-use App\Http\Controllers\SlideController;
-use App\Jobs\checkNewDataFromServer;
-use App\Jobs\getWeather;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,8 +12,6 @@ use App\Jobs\getWeather;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Auth::routes();
 
 Route::redirect('/', '/'.env('APP_SSP_URL'));
 Route::get('/{id}', [ViewTvController::class, 'view'])->name('view');

@@ -92,7 +92,7 @@ class ViewTvController extends Controller
         $newData = false;
 
         $getLocation = Location::where('name', env('APP_SSP_URL'))->first();
-
+        
         if($getLocation->name != $location['name']) { $newData = true; }
         if($getLocation->street != $location['street']) { $newData = true; }
         if($getLocation->streetno != $location['streetno']) { $newData = true; }

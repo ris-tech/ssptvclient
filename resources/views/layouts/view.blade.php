@@ -44,7 +44,6 @@
         </main>          
     </div>
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/summernote.min.js') }}"></script>
     <script src="{{ asset('assets/js/tv.js') }}"></script>
 </body>
 </html>

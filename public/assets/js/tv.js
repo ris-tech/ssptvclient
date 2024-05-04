@@ -4,7 +4,7 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': window.csrf_token
     }
 });
-console.log('Lokacija: '+window.tvLocationId);
+//console.log('Lokacija: '+window.tvLocationId);
 let  request = $.ajax({
     url: window.getWeatherData,
     method: 'POST',
@@ -60,7 +60,7 @@ function isInternetConnected(){
             crossDomain: true,
             dataType: 'json',
             success: function(result){  
-                console.log(result);
+                //console.log(result);
                 if(result.status == 'yes') {
                     window.location = window.location;
                 }
@@ -73,7 +73,7 @@ function isInternetConnected(){
     
     setTimeout(() => {
         isInternetConnected();
-    }, 3000);
+    }, 600000);
 }
 
 isInternetConnected();
