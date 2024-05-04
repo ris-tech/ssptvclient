@@ -24,10 +24,18 @@
         window.getWeatherData = '{{route("tv.getWeatherData")}}';
         window.csrf_token = '{{csrf_token() }}';
         window.weatherIconPath = "{{asset('assets/img/weather')}}";
+        window.getNewData = '{{route("getNewData")}}';
+        window.getUpdatedData = '{{route("getUpdatedData")}}';
     </script>
     <link rel="stylesheet" href="{{asset('assets/css/view.css')}}" />
 </head>
 <body class="m-0 p-0">
+    <div class="updateBar position-absolute m-3 p-2 bg-success text-light" style="z-index:50000; right:10px;">
+        Azurirano
+    </div>
+    <div class="onlinebar position-absolute m-0 p-0 bg-success w-100" style="z-index:50000;height:3px;">
+        
+    </div>
     <div id="app m-0 p-0">
         <main class="p-0 m-0">
             <div class="container-fluid m-0 p-0">

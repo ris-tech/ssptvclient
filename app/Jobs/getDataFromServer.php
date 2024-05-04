@@ -50,7 +50,9 @@ class getDataFromServer implements ShouldQueue
         $slides = $processed['slides'];
         $weather = $processed['weather'];
 
-        $addLocation = Location::insert([
+        $addLocation = Location::updateOrInsert(
+            ['id' => $location['id']],
+            [
             'id' => $location['id'],
             'name' => $location['name'],
             'street' => $location['street'],
@@ -62,13 +64,17 @@ class getDataFromServer implements ShouldQueue
             'details' => $location['details']
         ]);
 
-        $addTv = Tv::insert([
+        $addTv = Tv::updateOrInsert(
+            ['id' => $tv['id']],
+            [
             'id' => $tv['id'],
             'location_id' => $tv['location_id']
         ]);
 
         foreach($slides as $slide) {
-            $addSlide = Slide::insert([
+            $addSlide = Slide::updateOrInsert(
+                ['id' => $slide['id']],
+                [
                 'id' => $slide['id'],
                 'location_id' => $slide['location_id'],
                 'tv_id' => $slide['tv_id'],
@@ -78,7 +84,9 @@ class getDataFromServer implements ShouldQueue
             ]);
 
             foreach($slide['slide_images'] as $slideImage) {
-                $addSlideImage = SlideImage::insert([
+                $addSlideImage = SlideImage::updateOrInsert(
+                    ['id' => $slideImage['id']],
+                    [
                     'id' => $slideImage['id'],
                     'location_id' => $slideImage['location_id'],
                     'tv_id' => $slideImage['tv_id'],
@@ -109,7 +117,9 @@ class getDataFromServer implements ShouldQueue
             }
         }
         foreach($weather as $weatherData) {
-            $addWeather = Weather::insert([
+            $addWeather = Weather::updateOrInsert(
+                ['id' => $weatherData['id']],
+                [
                 'id' => $weatherData['id'],
                 'location_id' => $weatherData['location_id'],
                 'vreme' => $weatherData['vreme'],

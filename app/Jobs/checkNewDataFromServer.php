@@ -1,76 +1,38 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Jobs;
 
-use Illuminate\Http\Request;
 use App\Models\Location;
-use App\Models\Tv;
-use App\Models\Slide;
-use App\Jobs\getDataFromServer;
 use App\Models\NewData;
+use App\Models\Slide;
 use App\Models\SlideImage;
+use App\Models\Tv;
 use App\Models\Weather;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class ViewTvController extends Controller
+class checkNewDataFromServer implements ShouldQueue
 {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * Create a new job instance.
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        //
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @param  \App\Location  $location
-     * @return \Illuminate\Contracts\Support\Renderable
+     * Execute the job.
      */
-    public function getWeatherData(Request $request): JsonResponse
-    {
-        $weather = Weather::where('location_id', $request->locationId)->where('vreme', date('Y-m-d H:00:00'))->first();
-        return response()->json($weather);
-    }
-
-    public function getUpdatedData(Request $request): JsonResponse
-    {
-        $updated = NewData::first();
-        if($updated == NULL) {
-            return response()->json(['status' => 'no']);
-        } else {
-            DB::table('new_data')->truncate();
-            return response()->json(['status' => 'yes']);
-        }
-    }
-    public function view(Request $request)
-    {
-
-        $route = $request->path();
-
-        $locationdata = Location::where('name', $route)->first();
-   
-        if($locationdata == null) {
-            getDataFromServer::dispatch();
-            return view('viewPanding');
-        } else {
-            getDataFromServer::dispatch();
-            $tvs = Tv::where('location_id', $locationdata->id)->first();
-            $locations = Location::where('id', $locationdata->id)->first();
-
-            $slides = Slide::where('tv_id', $tvs->id)->with('slideImages')->get();
-            return view('view', ["location" => $locationdata->id, "tv_marquee" => $locationdata->tv_marquee], compact('tvs', 'slides'));
-        }
-
-        
-    }
-
-    public function NewData() : JsonResponse 
+    public function handle(): void
     {
         $ch = curl_init();
 
@@ -119,12 +81,11 @@ class ViewTvController extends Controller
         }
         $newSlideData = false;
         $newSlideImageData = false;
-        $erasedSlideImagesState = false;
 
         foreach($slides as $slide) {
 
             $getSlide = Slide::where('id', $slide['id'])->first();
-            $getAllSlideIds[] = $slide['id'];
+
             if($getSlide != NULL) {
 
                 if($getSlide->slide_content != $slide['slide_content']) { $newSlideData = true; }
@@ -132,8 +93,7 @@ class ViewTvController extends Controller
                 if($getSlide->sorting != $slide['sorting']) { $newSlideData = true; }
 
             }
-
-            if($newSlideData || $getSlide == NULL) {
+            if($newSlideData) {
                 $addSlide = Slide::updateOrInsert(
                     ['id' => $slide['id']],
                     [
@@ -149,14 +109,10 @@ class ViewTvController extends Controller
             foreach($slide['slide_images'] as $slideImage) {
                 $getSlideImage = SlideImage::where('id', $slideImage['id'])->first();
 
-                $getSlideImageIds[$slide['id']][] = $slideImage['id'];
+                if($getSlideImage->tv_img != $slideImage['tv_img']) { $newSlideImageData = true; }
+                if($getSlideImage->sorting != $slideImage['sorting']) { $newSlideImageData = true; }
 
-                if($getSlideImage != NULL) {
-                    if($getSlideImage->tv_img != $slideImage['tv_img']) { $newSlideImageData = true; }
-                    if($getSlideImage->sorting != $slideImage['sorting']) { $newSlideImageData = true; }
-                }            
-
-                if($newSlideImageData || $getSlideImage == NULL) {
+                if($newSlideImageData) {
                     $addSlideImage = SlideImage::updateOrInsert(
                         ['id' => $slideImage['id']],
                         [
@@ -168,8 +124,7 @@ class ViewTvController extends Controller
                         'sorting' => $slideImage['sorting'],
                     ]);
                 
-                    $newSlideImageData = true;
-                    
+
                     $url = $imageURL.$slideImage['tv_img']; 
                     $file_name = basename($url); 
 
@@ -190,25 +145,8 @@ class ViewTvController extends Controller
                         ])->error('File download Failed');
                     } 
                 }
-
             }
         }
-        
-        foreach($getSlideImageIds as $slideId => $slideImageId) {
-           
-            $getSlideImagesNI = SlideImage::whereNotIn('id', $slideImageId)->where('slide_id', $slideId)->get();
-            if($getSlideImagesNI->isNotEmpty()) {
-                foreach($getSlideImagesNI as $slideImagesNI) {
-                    if(file_exists(public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$slideImagesNI->tv_img))) {
-                        unlink(public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$slideImagesNI->tv_img));
-                    }
-                    SlideImage::where('id', $slideImagesNI->id)->delete();
-                }
-                $erasedSlideImagesState = true;
-            }
-        }
-
-
         foreach($weather as $weatherData) {
             $addWeather = Weather::updateOrInsert(
                 ['id' => $weatherData['id']],
@@ -222,33 +160,8 @@ class ViewTvController extends Controller
             ]);
         }
 
-        $erasedSlidesState = false;
-        
-        $erasedSlides = Slide::whereNotIn('id', $getAllSlideIds)->where('location_id', $location['id'])->get();
-        if($erasedSlides->isNotEmpty()) {
-            foreach($erasedSlides as $erasedSlide) {
-                $imagesToErase = SlideImage::where('slide_id', $erasedSlide->id)->get();
-                foreach($imagesToErase as $imageToErase) {
-                    if(file_exists(public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$imageToErase->tv_img))) {
-                        unlink(public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$imageToErase->tv_img));
-                    }
-                    SlideImage::where('id', $imageToErase->id)->delete();
-                }
-                Slide::where('id', $erasedSlide->id)->delete();
-            }
-            $erasedSlidesState = true;
+        if($newData || $newSlideData || $newSlideImageData) {
+            NewData::create(['newData' => 'da']);
         }
-        if($newData) { $what = 'newData'; }
-        if($newSlideData) { $what = 'newSlideData'; }
-        if($newSlideImageData) { $what = 'newSlideImageData'; }
-        if($erasedSlidesState) { $what = 'erasedSlidesState'; }
-        if($erasedSlideImagesState) { $what = 'erasedSlideImagesState'; }
-
-        if($newData || $newSlideData || $newSlideImageData || $erasedSlidesState || $erasedSlideImagesState) {
-            return response()->json(['status' => 'yes', 'what' => $what]);
-        } else {
-            return response()->json(['status' => 'no']);
-        }
-
     }
 }

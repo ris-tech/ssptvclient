@@ -17,6 +17,6 @@
 <script>
     setTimeout(() => {
         window.location = window.location;
-    }, 10000);
+    }, 5000);
 </script>
 @endsection

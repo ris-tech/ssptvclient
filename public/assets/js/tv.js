@@ -19,6 +19,64 @@ let  request = $.ajax({
     }
 });
 
+setTimeout(() => {
+    $('.updateBar').fadeOut();
+}, 3000);
+
+
+function getWeather() {
+    let  request = $.ajax({
+        url: window.getWeatherData,
+        method: 'POST',
+        data: {locationId: window.tvLocationId},
+        crossDomain: true,
+        dataType: 'json',
+        success: function(result){   
+            $('.weather-desc').html(result.vremetext);  
+            $('.weather-degreece').html(result.stepeni+' C°');  
+            $('.weather-icon').html('<img src="'+window.weatherIconPath+'/'+result.icon+'">');      
+            $('.weather-place').html(window.tvLocationName);
+        }
+    });
+}
+
+setTimeout(() => {
+    getWeather();
+}, 900000);
+
+function isInternetConnected(){
+    if(navigator.onLine) {
+        $('.onlinebar').removeClass('bg-danger');
+        $('.onlinebar').addClass('bg-success');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': window.csrf_token
+            }
+        });
+        let req = $.ajax({
+            url: window.getNewData,
+            method: 'GET',
+            data: {},
+            crossDomain: true,
+            dataType: 'json',
+            success: function(result){  
+                console.log(result);
+                if(result.status == 'yes') {
+                    window.location = window.location;
+                }
+            }
+        });
+    } else {
+        $('.onlinebar').removeClass('bg-success');
+        $('.onlinebar').addClass('bg-danger');        
+    }
+    
+    setTimeout(() => {
+        isInternetConnected();
+    }, 3000);
+}
+
+isInternetConnected();
 
 
 $(document).ready(function () {

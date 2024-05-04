@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\TvController;
 use App\Http\Controllers\SlideController;
+use App\Jobs\checkNewDataFromServer;
 use App\Jobs\getWeather;
 
 /*
@@ -27,3 +28,6 @@ Auth::routes();
 Route::redirect('/', '/'.env('APP_SSP_URL'));
 Route::get('/{id}', [ViewTvController::class, 'view'])->name('view');
 Route::post('/getWeatherData/', [ViewTvController::class, 'getWeatherData'])->name('tv.getWeatherData');
+Route::post('/getWeatherData/', [ViewTvController::class, 'getWeatherData'])->name('tv.getWeatherData');
+Route::get('/chk/getUpdatedData/', [ViewTvController::class, 'getUpdatedData'])->name('getUpdatedData');
+Route::get('/chk/NewData/', [ViewTvController::class, 'NewData'])->name('getNewData');

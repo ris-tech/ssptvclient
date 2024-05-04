@@ -15,9 +15,29 @@
 
     <script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}" />
+    <script src="{{asset('assets/js/dropzone.min.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('assets/css/dropzone.min.css')}}" />
 
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
-    <link rel="stylesheet" href="{{asset('assets/css/bootstrap-icons.min.css')}}" />   
+    <link rel="stylesheet" href="{{asset('assets/css/bootstrap-icons.min.css')}}" />
+
+    <script src="{{asset('assets/js/sweetalert2.all.min.js')}}"></script>
+    <link rel="stylesheet" href="{{asset('assets/css/sweetalert2.min.css')}}" />
+
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script>
+
+    </script>
+    <link rel="stylesheet" href="{{asset('assets/css/tv.css')}}" />
+
+
+    <!-- Scripts -->
+    
+    
+    <script src="{{ asset('assets/js/summernote.min.js') }}"></script>
+
+    
     
 </head>
 <body>
@@ -86,6 +106,8 @@
         </main>
           
     </div>
+    
+    <script src="{{ asset('assets/js/tv.js') }}"></script>
 </body>
 </html>
 
