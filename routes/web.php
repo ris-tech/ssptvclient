@@ -27,8 +27,3 @@ Auth::routes();
 Route::redirect('/', '/'.env('APP_SSP_URL'));
 Route::get('/{id}', [ViewTvController::class, 'view'])->name('view');
 Route::post('/getWeatherData/', [ViewTvController::class, 'getWeatherData'])->name('tv.getWeatherData');
-
-Route::get('/getWeather/', function() {
-
-    getWeather::dispatch();
-});

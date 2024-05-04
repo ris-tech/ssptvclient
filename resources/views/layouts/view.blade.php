@@ -23,6 +23,7 @@
         window.tvLocationName = '{{$tvs->location->city}}';
         window.getWeatherData = '{{route("tv.getWeatherData")}}';
         window.csrf_token = '{{csrf_token() }}';
+        window.weatherIconPath = "{{asset('assets/img/weather')}}";
     </script>
     <link rel="stylesheet" href="{{asset('assets/css/view.css')}}" />
 </head>

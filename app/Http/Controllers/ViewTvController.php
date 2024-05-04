@@ -30,7 +30,7 @@ class ViewTvController extends Controller
      */
     public function getWeatherData(Request $request): JsonResponse
     {
-        $
+        
         $weather = Weather::where('location_id', $request->locationId)->where('vreme', date('Y-m-d H:00:00'))->first();
         return response()->json($weather);
     }

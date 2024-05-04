@@ -14,7 +14,7 @@ let  request = $.ajax({
     success: function(result){   
         $('.weather-desc').html(result.vremetext);  
         $('.weather-degreece').html(result.stepeni+' C°');  
-        //$('.weather-icon').html('<img src="'+result.current.condition.icon+'">');      
+        $('.weather-icon').html('<img src="'+window.weatherIconPath+'/'+result.icon+'">');      
         $('.weather-place').html(window.tvLocationName);
     }
 });
