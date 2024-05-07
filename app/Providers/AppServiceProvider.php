@@ -31,5 +31,20 @@ class AppServiceProvider extends ServiceProvider
                 'Ž', 'Č', 'Ć', 'Š', 'Đ', 'A', 'B', 'V', 'G', 'D', 'E', 'Z', 'I', 'J', 'K','Lj', 'L', 'M','Nj', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'F', 'H', 'c');
                 return str_replace($lat, $cyr, $text);
         });
+        Str::macro('datenames', function ($text)
+        {
+            $datenames = [
+                '1' => 'Ponedeljak',
+                '2' => 'Utorak',
+                '3' => 'Sreda',
+                '4' => 'Četvrtak',
+                '5' => 'Petak',
+                '6' => 'Subota',
+                '7' => 'Nedelja'
+            ];
+
+            return($datenames[$text]);
+        });
+
     }
 }

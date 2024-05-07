@@ -5,7 +5,7 @@
     <div class="fs-1">Синдикат српске полиције</div>
 </div>
 <div class="col-2" style="align-items: center;">
-    <div class="fs-5">{{ Str::lat2cyr(StaticArray::$datenames[date('N')]) }}<br><span class="fs-5 datecont">{{ date('d.m.Y') }}</span>&nbsp;&nbsp;<span class="fs-5 timecont">{{ date('H:i') }}</span></div> 
+    <div class="fs-5">{{ Str::lat2cyr(Str::datenames(date('N'))) }}<br><span class="fs-5 datecont">{{ date('d.m.Y') }}</span>&nbsp;&nbsp;<span class="fs-5 timecont">{{ date('H:i') }}</span></div> 
 </div>
 <div class="col-4 text-end text-light" style="max-height:100%;">
     <div class="row">
