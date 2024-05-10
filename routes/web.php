@@ -16,6 +16,5 @@ use App\Http\Controllers\ViewTvController;
 Route::redirect('/', '/'.env('APP_SSP_URL'));
 Route::get('/{id}', [ViewTvController::class, 'view'])->name('view');
 Route::post('/getWeatherData/', [ViewTvController::class, 'getWeatherData'])->name('tv.getWeatherData');
-Route::post('/getWeatherData/', [ViewTvController::class, 'getWeatherData'])->name('tv.getWeatherData');
 Route::get('/chk/getUpdatedData/', [ViewTvController::class, 'getUpdatedData'])->name('getUpdatedData');
 Route::get('/chk/NewData/', [ViewTvController::class, 'NewData'])->name('getNewData');
