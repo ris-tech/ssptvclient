@@ -82,6 +82,13 @@ isInternetConnected();
 $(document).ready(function () {
     function getTime() {
         var now = new Date(Date.now());
+        var formDate = (now.getDate() < 10 ? "0" : "") +
+            now.getDate() +
+            "." +
+            (now.getMonth() < 10 ? "0" : "") +
+            (now.getMonth()+1) +
+            "." +now.getFullYear();
+
         var formatted =
             (now.getHours() < 10 ? "0" : "") +
             now.getHours() +
@@ -92,6 +99,7 @@ $(document).ready(function () {
             (now.getSeconds() < 10 ? "0" : "") +
             now.getSeconds();
         $(".timecont").html(formatted);
+        $(".datecont").html(formDate);
 
         setTimeout(function () {
             getTime();
