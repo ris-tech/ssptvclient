@@ -44,16 +44,30 @@ setTimeout(() => {
     getWeather();
 }, 900000);
 
-
-let type = navigator.connection.effectiveType;
-
-function updateConnectionStatus() {
-  alert('Connection type changed from '+type+'to '+navigator.connection.effectiveType);
-  type = navigator.connection.effectiveType;
+function isOnline(no,yes){
+    var xhr = XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHttp');
+    xhr.onload = function(){
+        if(yes instanceof Function){
+            yes();
+        }
+    }
+    xhr.onerror = function(){
+        if(no instanceof Function){
+            no();
+        }
+    }
+    xhr.open("GET","anypage.php",true);
+    xhr.send();
 }
 
-navigator.connection.addEventListener("change", updateConnectionStatus);
-
+isOnline(
+    function(){
+        alert("Sorry, we currently do not have Internet access.");
+    },
+    function(){
+        alert("Succesfully connected!");
+    }
+);
 
 function isInternetConnected(){
     if(navigator.onLine) {
