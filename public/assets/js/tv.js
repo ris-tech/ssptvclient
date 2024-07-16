@@ -44,6 +44,17 @@ setTimeout(() => {
     getWeather();
 }, 900000);
 
+
+let type = navigator.connection.effectiveType;
+
+function updateConnectionStatus() {
+  alert('Connection type changed from '+type+'to '+navigator.connection.effectiveType);
+  type = navigator.connection.effectiveType;
+}
+
+navigator.connection.addEventListener("change", updateConnectionStatus);
+
+
 function isInternetConnected(){
     if(navigator.onLine) {
         $('.onlinebar').removeClass('bg-danger');
