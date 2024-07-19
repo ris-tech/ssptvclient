@@ -1,4 +1,14 @@
 
+
+var latinToCyrillic = { "80": 1055 /* entire alphabet */ };
+var cyrillicToLatin = { "1115" : 263 /* entire alphabet */ };
+var toCyrillic = function(character){
+    return String.fromCharCode(latinToCyrillic[character.charCodeAt(0)]);
+};
+var toLatin = function(character){
+    return String.fromCharCode(cyrillicToLatin[character.charCodeAt(0)]);
+}
+
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': window.csrf_token
@@ -12,8 +22,8 @@ let  request = $.ajax({
     crossDomain: true,
     dataType: 'json',
     success: function(result){   
-        $('.weather-desc').html(result.vremetext);  
-        $('.weather-degreece').html(result.stepeni+' C°');  
+        $('.weather-desc').html(toCyrillic(result.vremetext));  
+        $('.weather-degreece').html(toCyrillic(result.stepeni)+' C°');  
         $('.weather-icon').html('<img src="'+window.weatherIconPath+'/'+result.icon+'">');      
         $('.weather-place').html(window.tvLocationName);
     }
