@@ -31,7 +31,7 @@
 </head>
 <body class="m-0 p-0">
     <div class="updateBar position-absolute m-3 p-2 bg-success text-light" style="z-index:50000; right:10px;">
-        Azurirano
+        Ажурирано
     </div>
     <div class="onlinebar position-absolute m-0 p-0 bg-success w-100" style="z-index:50000;height:3px;">
         
