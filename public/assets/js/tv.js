@@ -1,14 +1,88 @@
 
+function latinToCyrillic(latin) {
+    var exchanged = "";
+    for(var i=0; i<latin.length; i++) {
+        switch (latin.charAt(i)) {
+            case "a":   exchanged += "а";    break;
+            case "b":   exchanged += "б";    break;
+            case "v":   exchanged += "в";    break;
+            case "g":   exchanged += "г";    break;
+            case "đ":   exchanged += "ђ";    break;
+            case "e":   exchanged += "е";    break;
+            case "ž":   exchanged += "ж";    break;
+            case "z":   exchanged += "з";    break;
+            case "i":   exchanged += "и";    break;
+            case "j":   exchanged += "ј";    break;
+            case "k":   exchanged += "к";    break;
+            case "l":
+                if(latin.charAt(i+1) == "j") {  exchanged += "љ";   i++;  }
+                else {  exchanged += "л";   }
+                break;
+            case "m":   exchanged += "м";    break;
+            case "n":
+                if(latin.charAt(i+1) == "j") {   exchanged += "њ";    i++;   }
+                else {  exchanged += "н";   }
+                break;
+            case "o":   exchanged += "о";    break;
+            case "p":   exchanged += "п";    break;
+            case "r":   exchanged += "р";    break;
+            case "s":   exchanged += "с";    break;
+            case "t":   exchanged += "т";    break;
+            case "ć":   exchanged += "ћ";    break;
+            case "u":   exchanged += "у";    break;
+            case "f":   exchanged += "ф";    break;
+            case "h":   exchanged += "х";    break;
+            case "c":   exchanged += "ц";    break;
+            case "č":   exchanged += "ч";    break;
+            case "d":
+                if(latin.charAt(i+1) == "ž") {   exchanged += "џ";   i++; }
+                else {   exchanged += "д"; }
+                break;
+            case "š":   exchanged += "ш";    break;
 
-var latinToCyrillic = { "80": 1055 /* entire alphabet */ };
-var cyrillicToLatin = { "1115" : 263 /* entire alphabet */ };
-var toCyrillic = function(character){
-    return String.fromCharCode(latinToCyrillic[character.charCodeAt(0)]);
-};
-var toLatin = function(character){
-    return String.fromCharCode(cyrillicToLatin[character.charCodeAt(0)]);
+            case "A":   exchanged += "А";    break;
+            case "B":   exchanged += "Б";    break;
+            case "V":   exchanged += "В";    break;
+            case "G":   exchanged += "Г";    break;
+            case "Đ":   exchanged += "Ђ";    break;
+            case "E":   exchanged += "Е";    break;
+            case "Ž":   exchanged += "Ж";    break;
+            case "Z":   exchanged += "З";    break;
+            case "I":   exchanged += "И";    break;
+            case "J":   exchanged += "Ј";    break;
+            case "K":   exchanged += "К";    break;
+            case "L":
+                if(latin.charAt(i+1) == "j") {  exchanged += "Љ";   i++;  }
+                else {  exchanged += "Л";   }
+                break;
+            case "M":   exchanged += "М";    break;
+            case "N":
+                if(latin.charAt(i+1) == "j") {   exchanged += "Њ";    i++;   }
+                else {  exchanged += "Н";   }
+                break;
+            case "O":   exchanged += "О";    break;
+            case "P":   exchanged += "П";    break;
+            case "R":   exchanged += "Р";    break;
+            case "S":   exchanged += "С";    break;
+            case "T":   exchanged += "Т";    break;
+            case "Ć":   exchanged += "Ћ";    break;
+            case "U":   exchanged += "У";    break;
+            case "F":   exchanged += "Ф";    break;
+            case "H":   exchanged += "Х";    break;
+            case "C":   exchanged += "Ц";    break;
+            case "Č":   exchanged += "Ч";    break;
+            case "D":
+                if(latin.charAt(i+1) == "ž") {    exchanged += "Џ";   i++;   }
+                else {   exchanged += "Д";  }
+                break;
+
+            case "Š":   exchanged += "Ш";    break;
+
+            default: exchanged += latin.charAt(i);
+        }
+    }
+    return exchanged;
 }
-
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': window.csrf_token
@@ -22,10 +96,10 @@ let  request = $.ajax({
     crossDomain: true,
     dataType: 'json',
     success: function(result){   
-        $('.weather-desc').html(toCyrillic(result.vremetext));  
-        $('.weather-degreece').html(toCyrillic(result.stepeni)+' C°');  
+        $('.weather-desc').html(latinToCyrillic(result.vremetext));  
+        $('.weather-degreece').html(result.stepeni+' C°');  
         $('.weather-icon').html('<img src="'+window.weatherIconPath+'/'+result.icon+'">');      
-        $('.weather-place').html(window.tvLocationName);
+        $('.weather-place').html(latinToCyrillic(window.tvLocationName));
     }
 });
 
