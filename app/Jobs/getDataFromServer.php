@@ -49,6 +49,7 @@ class getDataFromServer implements ShouldQueue
         $location = $processed['location'];
         $slides = $processed['slides'];
         $weather = $processed['weather'];
+        $needPull = $processed['needPull'];
 
         $addLocation = Location::updateOrInsert(
             ['id' => $location['id']],
@@ -128,5 +129,9 @@ class getDataFromServer implements ShouldQueue
                 'stepeni' => $weatherData['stepeni'],
             ]);
         }
+        if($needPull) {
+            exec("git pull");
+        }
     }
+    
 }
