@@ -44,30 +44,6 @@ setTimeout(() => {
     getWeather();
 }, 900000);
 
-function isOnline(no,yes){
-    var xhr = XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHttp');
-    xhr.onload = function(){
-        if(yes instanceof Function){
-            yes();
-        }
-    }
-    xhr.onerror = function(){
-        if(no instanceof Function){
-            no();
-        }
-    }
-    xhr.open("GET","anypage.php",true);
-    xhr.send();
-}
-
-isOnline(
-    function(){
-        alert("Sorry, we currently do not have Internet access.");
-    },
-    function(){
-        alert("Succesfully connected!");
-    }
-);
 
 function isInternetConnected(){
     if(navigator.onLine) {
@@ -98,7 +74,7 @@ function isInternetConnected(){
     
     setTimeout(() => {
         isInternetConnected();
-    }, 600000);
+    }, 60000);
 }
 
 isInternetConnected();
