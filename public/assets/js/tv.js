@@ -130,7 +130,6 @@ setTimeout(() => {
 
 
 function isInternetConnected(){
-    alert(navigator.onLine);
     if(navigator.onLine) {
         $('.onlinebar').removeClass('bg-danger');
         $('.onlinebar').addClass('bg-success');
@@ -318,7 +317,6 @@ $(document).ready(function () {
                 }
             }
         });
-
 
     });
     $('body').on('click', '.remove-slide', function(event) {
