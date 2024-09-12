@@ -35,7 +35,7 @@ class getDataFromServer implements ShouldQueue
         $ch = curl_init();
 
         $optArray = array(
-            CURLOPT_URL => 'https://muptv.ris-tech.de/api/ssp/'.env('APP_SSP_URL'),
+            CURLOPT_URL => 'http://muptv.local/api/ssp/'.env('APP_SSP_URL'),
             CURLOPT_RETURNTRANSFER => true
         );
 
@@ -48,8 +48,11 @@ class getDataFromServer implements ShouldQueue
         $tv = $processed['tv'];
         $location = $processed['location'];
         $slides = $processed['slides'];
+        $fbSlides = $processed['fbSlides'];
+        $fbPostImages = $processed['fbPostImages'];
         $weather = $processed['weather'];
         $needPull = $processed['needPull'];
+        
 
         $addLocation = Location::updateOrInsert(
             ['id' => $location['id']],
@@ -72,30 +75,70 @@ class getDataFromServer implements ShouldQueue
             'location_id' => $tv['location_id']
         ]);
 
+
+        //SlideImage::truncate();
+        //Slide::truncate();
+        $sorting = 0;
+        $sortingImages = 0;
+        foreach($fbSlides as $fbSlide) {
+            $addFbSlide = Slide::Insert([
+                'location_id' => $location['id'],
+                'tv_id' => $tv['id'],
+                'slide_content' => $fbSlide['message'],
+                'slide_title' => '',
+                'sorting' => $sorting,
+            ]);
+            $sorting++;
+            foreach($fbPostImages as $fbPostImage) {
+                $addSlideImage = SlideImage::Insert([
+                    'location_id' => $location['id'],
+                    'tv_id' => $tv['id'],
+                    'slide_id' => $addFbSlide->id(),
+                    'tv_img' => $fbPostImage['attachment'],
+                    'sorting' => $sortingImages,
+                ]);
+                $sortingImages++;
+                $url = $imageURL.'fb/'.$fbPostImage['attachment']; 
+                $file_name = basename($url); 
+
+                $imagePath = public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads').DIRECTORY_SEPARATOR;
+
+                if (file_put_contents($imagePath.$file_name, file_get_contents($url))) 
+                { 
+                    Log::build([
+                        'driver' => 'single',
+                        'path' => storage_path('logs/getDataFromServer.log'),
+                    ])->info('File downloaded successfully: '.$file_name);
+                } 
+                else
+                { 
+                    Log::build([
+                        'driver' => 'single',
+                        'path' => storage_path('logs/getDataFromServer.log'),
+                    ])->error('File download Failed');
+                } 
+            }
+        }
+
         foreach($slides as $slide) {
-            $addSlide = Slide::updateOrInsert(
-                ['id' => $slide['id']],
-                [
-                'id' => $slide['id'],
+            $addSlide = Slide::Insert([
                 'location_id' => $slide['location_id'],
                 'tv_id' => $slide['tv_id'],
                 'slide_content' => $slide['slide_content'],
                 'slide_title' => $slide['slide_title'],
-                'sorting' => $slide['sorting'],
+                'sorting' => $sorting,
             ]);
-
+            $sorting++;
             foreach($slide['slide_images'] as $slideImage) {
-                $addSlideImage = SlideImage::updateOrInsert(
-                    ['id' => $slideImage['id']],
-                    [
+                $addSlideImage = SlideImage::Insert([
                     'id' => $slideImage['id'],
                     'location_id' => $slideImage['location_id'],
                     'tv_id' => $slideImage['tv_id'],
-                    'slide_id' => $slideImage['slide_id'],
+                    'slide_id' => $addSlide->id(),
                     'tv_img' => $slideImage['tv_img'],
-                    'sorting' => $slideImage['sorting'],
+                    'sorting' => $sortingImages,
                 ]);
-
+                $sortingImages++;
                 $url = $imageURL.$slideImage['tv_img']; 
                 $file_name = basename($url); 
 
@@ -106,7 +149,7 @@ class getDataFromServer implements ShouldQueue
                     Log::build([
                         'driver' => 'single',
                         'path' => storage_path('logs/getDataFromServer.log'),
-                    ])->info('ile downloaded successfully: '.$file_name);
+                    ])->info('File downloaded successfully: '.$file_name);
                 } 
                 else
                 { 

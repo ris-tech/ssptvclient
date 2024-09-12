@@ -25,7 +25,10 @@
         window.csrf_token = '{{csrf_token() }}';
         window.weatherIconPath = "{{asset('assets/img/weather')}}";
         window.getNewData = '{{route("getNewData")}}';
+        window.getCurrentSlide = '{{route("getCurrentSlide")}}';
+        window.slideIds = '{{$slideIds}}';
         window.getUpdatedData = '{{route("getUpdatedData")}}';
+        window.imgPath = "{{asset('assets/img')}}";
     </script>
     <link rel="stylesheet" href="{{asset('assets/css/view.css')}}" />
 </head>

@@ -18,3 +18,5 @@ Route::get('/{id}', [ViewTvController::class, 'view'])->name('view');
 Route::post('/getWeatherData/', [ViewTvController::class, 'getWeatherData'])->name('tv.getWeatherData');
 Route::get('/chk/getUpdatedData/', [ViewTvController::class, 'getUpdatedData'])->name('getUpdatedData');
 Route::get('/chk/NewData/', [ViewTvController::class, 'NewData'])->name('getNewData');
+Route::get('/chk/getSlideIds/', [ViewTvController::class, 'getSlideIds'])->name('getSlideIds');
+Route::post('/chk/getCurrentSlide/', [ViewTvController::class, 'getCurrentSlide'])->name('getCurrentSlide');

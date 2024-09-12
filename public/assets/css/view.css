@@ -32,25 +32,7 @@ html, body { height: 100%; overflow: hidden;}
     }
 }
 
-@keyframes aktiveSlide {
-    from {
-        margin-left: -400px;
-        opacity: 0;
-    }
-    to {
-        margin-left: 0;
-        opacity: 1;
-    }
-}
 
-
-
-.aktiveSlide {
-    display: block !important;
-    background-color: rgba(255,255,255,0.9);
-    animation-name: aktiveSlide;
-    animation-duration: 1.2s;
-}
 
 
 
@@ -65,10 +47,3 @@ html, body { height: 100%; overflow: hidden;}
     height:100%;
 }
 
-.mySlidesContainer {
-    display:none;
-}
-
-.slide-images {
-    display:none;
-}
