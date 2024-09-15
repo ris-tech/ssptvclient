@@ -1,90 +1,91 @@
 //const { time } = require("console");
+function latinToCyrillic(latinStr) {
+    var exchanged = "";
+    for(var i=0; i<latinStr.length; i++) {
+        switch (latinStr.charAt(i)) {
+            case "a":   exchanged += "а";    break;
+            case "b":   exchanged += "б";    break;
+            case "v":   exchanged += "в";    break;
+            case "g":   exchanged += "г";    break;
+            case "đ":   exchanged += "ђ";    break;
+            case "e":   exchanged += "е";    break;
+            case "ž":   exchanged += "ж";    break;
+            case "z":   exchanged += "з";    break;
+            case "i":   exchanged += "и";    break;
+            case "j":   exchanged += "ј";    break;
+            case "k":   exchanged += "к";    break;
+            case "l":
+                if(latinStr.charAt(i+1) == "j") {  exchanged += "љ";   i++;  }
+                else {  exchanged += "л";   }
+                break;
+            case "m":   exchanged += "м";    break;
+            case "n":
+                if(latinStr.charAt(i+1) == "j") {   exchanged += "њ";    i++;   }
+                else {  exchanged += "н";   }
+                break;
+            case "o":   exchanged += "о";    break;
+            case "p":   exchanged += "п";    break;
+            case "r":   exchanged += "р";    break;
+            case "s":   exchanged += "с";    break;
+            case "t":   exchanged += "т";    break;
+            case "ć":   exchanged += "ћ";    break;
+            case "u":   exchanged += "у";    break;
+            case "f":   exchanged += "ф";    break;
+            case "h":   exchanged += "х";    break;
+            case "c":   exchanged += "ц";    break;
+            case "č":   exchanged += "ч";    break;
+            case "d":
+                if(latinStr.charAt(i+1) == "ž") {   exchanged += "џ";   i++; }
+                else {   exchanged += "д"; }
+                break;
+            case "š":   exchanged += "ш";    break;
+
+            case "A":   exchanged += "А";    break;
+            case "B":   exchanged += "Б";    break;
+            case "V":   exchanged += "В";    break;
+            case "G":   exchanged += "Г";    break;
+            case "Đ":   exchanged += "Ђ";    break;
+            case "E":   exchanged += "Е";    break;
+            case "Ž":   exchanged += "Ж";    break;
+            case "Z":   exchanged += "З";    break;
+            case "I":   exchanged += "И";    break;
+            case "J":   exchanged += "Ј";    break;
+            case "K":   exchanged += "К";    break;
+            case "L":
+                if(latinStr.charAt(i+1) == "j") {  exchanged += "Љ";   i++;  }
+                else {  exchanged += "Л";   }
+                break;
+            case "M":   exchanged += "М";    break;
+            case "N":
+                if(latinStr.charAt(i+1) == "j") {   exchanged += "Њ";    i++;   }
+                else {  exchanged += "Н";   }
+                break;
+            case "O":   exchanged += "О";    break;
+            case "P":   exchanged += "П";    break;
+            case "R":   exchanged += "Р";    break;
+            case "S":   exchanged += "С";    break;
+            case "T":   exchanged += "Т";    break;
+            case "Ć":   exchanged += "Ћ";    break;
+            case "U":   exchanged += "У";    break;
+            case "F":   exchanged += "Ф";    break;
+            case "H":   exchanged += "Х";    break;
+            case "C":   exchanged += "Ц";    break;
+            case "Č":   exchanged += "Ч";    break;
+            case "D":
+                if(latinStr.charAt(i+1) == "ž") {    exchanged += "Џ";   i++;   }
+                else {   exchanged += "Д";  }
+                break;
+
+            case "Š":   exchanged += "Ш";    break;
+
+            default: exchanged += latinStr.charAt(i);
+        }
+    }
+    return exchanged;
+}
 
 $(document).ready(function () {
-    function latinToCyrillic(latin) {
-        var exchanged = "";
-        for(var i=0; i<latin.length; i++) {
-            switch (latin.charAt(i)) {
-                case "a":   exchanged += "а";    break;
-                case "b":   exchanged += "б";    break;
-                case "v":   exchanged += "в";    break;
-                case "g":   exchanged += "г";    break;
-                case "đ":   exchanged += "ђ";    break;
-                case "e":   exchanged += "е";    break;
-                case "ž":   exchanged += "ж";    break;
-                case "z":   exchanged += "з";    break;
-                case "i":   exchanged += "и";    break;
-                case "j":   exchanged += "ј";    break;
-                case "k":   exchanged += "к";    break;
-                case "l":
-                    if(latin.charAt(i+1) == "j") {  exchanged += "љ";   i++;  }
-                    else {  exchanged += "л";   }
-                    break;
-                case "m":   exchanged += "м";    break;
-                case "n":
-                    if(latin.charAt(i+1) == "j") {   exchanged += "њ";    i++;   }
-                    else {  exchanged += "н";   }
-                    break;
-                case "o":   exchanged += "о";    break;
-                case "p":   exchanged += "п";    break;
-                case "r":   exchanged += "р";    break;
-                case "s":   exchanged += "с";    break;
-                case "t":   exchanged += "т";    break;
-                case "ć":   exchanged += "ћ";    break;
-                case "u":   exchanged += "у";    break;
-                case "f":   exchanged += "ф";    break;
-                case "h":   exchanged += "х";    break;
-                case "c":   exchanged += "ц";    break;
-                case "č":   exchanged += "ч";    break;
-                case "d":
-                    if(latin.charAt(i+1) == "ž") {   exchanged += "џ";   i++; }
-                    else {   exchanged += "д"; }
-                    break;
-                case "š":   exchanged += "ш";    break;
-
-                case "A":   exchanged += "А";    break;
-                case "B":   exchanged += "Б";    break;
-                case "V":   exchanged += "В";    break;
-                case "G":   exchanged += "Г";    break;
-                case "Đ":   exchanged += "Ђ";    break;
-                case "E":   exchanged += "Е";    break;
-                case "Ž":   exchanged += "Ж";    break;
-                case "Z":   exchanged += "З";    break;
-                case "I":   exchanged += "И";    break;
-                case "J":   exchanged += "Ј";    break;
-                case "K":   exchanged += "К";    break;
-                case "L":
-                    if(latin.charAt(i+1) == "j") {  exchanged += "Љ";   i++;  }
-                    else {  exchanged += "Л";   }
-                    break;
-                case "M":   exchanged += "М";    break;
-                case "N":
-                    if(latin.charAt(i+1) == "j") {   exchanged += "Њ";    i++;   }
-                    else {  exchanged += "Н";   }
-                    break;
-                case "O":   exchanged += "О";    break;
-                case "P":   exchanged += "П";    break;
-                case "R":   exchanged += "Р";    break;
-                case "S":   exchanged += "С";    break;
-                case "T":   exchanged += "Т";    break;
-                case "Ć":   exchanged += "Ћ";    break;
-                case "U":   exchanged += "У";    break;
-                case "F":   exchanged += "Ф";    break;
-                case "H":   exchanged += "Х";    break;
-                case "C":   exchanged += "Ц";    break;
-                case "Č":   exchanged += "Ч";    break;
-                case "D":
-                    if(latin.charAt(i+1) == "ž") {    exchanged += "Џ";   i++;   }
-                    else {   exchanged += "Д";  }
-                    break;
-
-                case "Š":   exchanged += "Ш";    break;
-
-                default: exchanged += latin.charAt(i);
-            }
-        }
-        return exchanged;
-    }
+    
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': window.csrf_token
@@ -98,10 +99,17 @@ $(document).ready(function () {
         crossDomain: true,
         dataType: 'json',
         success: function(result){   
-            $('.weather-desc').html(latinToCyrillic(result.vremetext));  
-            $('.weather-degreece').html(result.stepeni+' C°');  
-            $('.weather-icon').html('<img src="'+window.weatherIconPath+'/'+result.icon+'">');      
-            $('.weather-place').html(latinToCyrillic(window.tvLocationName));
+            console.log('Weather');
+            console.log(result);
+            console.log(result.length);
+            if(typeof result.length === "undefined") {
+                $('.weather-desc').html(latinToCyrillic('Nema podataka'));
+            } else {
+                $('.weather-desc').html(latinToCyrillic(result.vremetext));  
+                $('.weather-degreece').html(result.stepeni+' C°');  
+                $('.weather-icon').html('<img src="'+window.weatherIconPath+'/'+result.icon+'">');      
+                $('.weather-place').html(latinToCyrillic(window.tvLocationName));
+            }
         }
     });
 
@@ -123,11 +131,14 @@ $(document).ready(function () {
                 $('.weather-place').html(window.tvLocationName);
             }
         });
+        setTimeout(() => {
+            getWeather();
+        }, 3600000);
     }
 
-    setTimeout(() => {
-        getWeather();
-    }, 900000);
+    
+
+    getWeather();
 
     let slides = $('.mySlidesContainer');
     let SlideText = $('body').find('.mySlidesText-container');
@@ -162,8 +173,6 @@ $(document).ready(function () {
 
     function chkNewData(){
         if(navigator.onLine) {
-            $('.onlinebar').removeClass('bg-danger');
-            $('.onlinebar').addClass('bg-success');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': window.csrf_token
@@ -224,12 +233,6 @@ $(document).ready(function () {
     }
     getTime();
 
-    $(".slide-content").each(function () {
-        $(this).summernote({
-            height: 300,
-        });
-    });
-
     function removeTags(str) {
         if ((str === null) || (str === ''))
             return false;
@@ -242,31 +245,6 @@ $(document).ready(function () {
         return str.replace(/(<([^>]+)>)/ig, '');
     }
 
-    
-    
-
-    function startImages(slideImage, cntImages, slideNo) {
-        if(currSlideNo == slideNo) {
-            $(slideImages[slideImage]).fadeIn();
-            if(cntImages > 1) {
-                setTimeout(function () {
-                    if(currentImage == cntSlideImagesArr) {
-                        $.when($(slideImages[slideImage]).fadeOut()).then(function() {
-                            currentImage = 0;
-                            startImages(currentImage, cntImages, slideNo);
-                        });
-                    } else {
-                        $.when($(slideImages[slideImage]).fadeOut()).then(function() {
-                            currentImage++; 
-                            startImages(currentImage, cntImages, slideNo);
-                        });
-                    }
-                }, 7000);
-            }  
-        }
-        
-    }
-
     function nl2br (str, replaceMode, isXhtml) {
 
         var breakTag = (isXhtml) ? '<br />' : '<br>';
@@ -277,6 +255,7 @@ $(document).ready(function () {
     timeoutId = {};
     let imageFunction = [];
     let oldId = -1;
+
     function startSlideShow(slideId) {
         let crrSlideId = 0;
         let slideImageTime = 2000;
@@ -298,19 +277,22 @@ $(document).ready(function () {
             async: true,
             dataType: 'json',
             success: function(result){ 
-
+                let timeToRead = 5000;
                 let slideTitle = result[0].slide_title;
                 let slideContent = nl2br(result[0].slide_content);
                 $('body').find('.slideTitle').html(slideTitle);
+                console.log('slideTitle: '+slideTitle.length);
                 $('body').find('.slideContent').html(slideContent);
                 slideImages = result[0].slide_images;
                 console.log(slideImages);
                 let slideImagesCnt = slideImages.length;
-
-                let geeks1 = removeTags(slideContent);    
-                let trim = geeks1.trim();
-                let geek = trim.split(" ");
-                let timeToRead = (geek.length/238)*60*600;
+                let contentLen = slideContent.length;
+                if(contentLen != 0) { 
+                    let geeks1 = removeTags(slideContent);    
+                    let trim = geeks1.trim();
+                    let geek = trim.split(" ");
+                    timeToRead = (geek.length/238)*60*600;
+                }
                 if(timeToRead < 5000) {
                     timeToRead = 2000;  
                 }
@@ -321,12 +303,10 @@ $(document).ready(function () {
                     newId = slideId;
                     console.log('newId: '+newId+' oldId: '+oldId);
                     if(oldId != newId) {
-                        if(oldId != 0) {
                             clearTimeout(timeoutId[oldId]);
                             currImage = 0;
                             startSlideImages(slideImages, slideImagesCnt, newId, true);
                             oldId = newId;
-                        }
                     }
                                
                 } else {
@@ -352,142 +332,45 @@ $(document).ready(function () {
                         }
                         startSlideShow(slideId);   
                         
-                    }, timeToRead+5000);
-                }, 5000);
+                    }, timeToRead+100);
+                }, 100);
             }
         });
     }
+
     let currImage = 0;
+
     function startSlideImages(slideImages, slideImagesCnt, slideId, start) {
         console.log('startSlideImages');
         console.log('currImage: '+currImage);
+        console.log('slideImagesCnt: '+slideImagesCnt);
         
         if(start) {
             currImage = 0;
             $('.slide-images').html('<img id="'+currImage+'" src="'+imgPath+'/uploads/'+slideImages[currImage].tv_img+'" style="position:absolute;width:100%;height:100%;object-fit:contain;display:none;">');
             $('body').find('img#'+currImage).fadeIn();
-            if(slideImagesCnt > 1) {
-                
-                currImage++;
-                
-            }
             start = false;
-        }
-        if(slideImagesCnt > 1) {
-            timeoutId[slideId] = setTimeout(() => {
-                oldImage = currImage-1;
-                console.log('oldImage: '+oldImage+' currImage: '+currImage);
-                $.when($('body').find('img#'+oldImage).fadeOut()).then(function () {
-                    $('.slide-images').html('<img id="'+currImage+'" src="'+imgPath+'/uploads/'+slideImages[currImage].tv_img+'" style="position:absolute;width:100%;height:100%;object-fit:contain;display:none;">');
-                    $('body').find('img#'+currImage).fadeIn();
-                });
-                
+            currImage++;
+        } else {
+            start = false;
+            oldImage = currImage-1;
+            console.log('oldImage: '+oldImage+' currImage: '+currImage);
+            $.when($('body').find('img#'+oldImage).fadeOut()).then(function () {
+                $('.slide-images').html('<img id="'+currImage+'" src="'+imgPath+'/uploads/'+slideImages[currImage].tv_img+'" style="position:absolute;width:100%;height:100%;object-fit:contain;display:none;">');
+                $('body').find('img#'+currImage).fadeIn();
                 currImage++;
-                if(slideImagesCnt == currImage) {
-                    currImage = 0;
-                }
+            });
+        }
+        
+        if(slideImagesCnt > 1) {
+            console.log('slideImagesCnt: '+slideImagesCnt+' currImage: '+currImage);
+            if(slideImagesCnt == currImage) {
+                currImage = 0;
+            }
+            timeoutId[slideId] = setTimeout(() => {
                 startSlideImages(slideImages, slideImagesCnt, slideId, false);
             }, 2000);
         }
 
     }
-
-    
-
-    /*function startSlideShow(slideNo) {
-
-        let SlideText = $(slides[slideNo]).find('.mySlidesText-container');
-        slideImages = $(slides[slideNo]).find('.slide-images');
-        
-        let cntSlideImages = slideImages.length;
-        
-        cntSlideImagesArr = cntSlideImages-1;
-        currentImage = 0;
-        
-        currSlideNo = slideNo;
-        startImages(currentImage, cntSlideImages, slideNo);
-
-        let geeks1 = removeTags(SlideText.html());    
-        let trim = geeks1.trim();
-        let geek = trim.split(" ");
-        let timeToRead = (geek.length/238)*60*600;
-
-        
-        $(slides[slideNo]).css("display", "flex").hide().fadeIn();
-        SlideText.animate({
-            scrollTop: 0
-        }, 100);
-
-        setTimeout(function () {
-                SlideText.animate({
-                    scrollTop: SlideText.prop("scrollHeight")
-                }, timeToRead);
-                setTimeout(function () {
-                    if(crrSlide == cntSlidesArr) {
-                        
-                        $.when($(slides[crrSlide]).fadeOut()).then(function() {
-                            
-                            crrSlide = 0; 
-                            startSlideShow(crrSlide);
-                        });
-                    } else {
-                        $.when($(slides[crrSlide]).fadeOut()).then(function() {
-                            SlideText.animate({
-                                scrollTop: 0,
-                            }, 100);
-                            crrSlide++;
-                            startSlideShow(crrSlide);
-                        });
-                    }
-                }, timeToRead+5000);
-               
-        }, 5000);
-    }*/
-
-    $('body').on('click', '.submitCopySlide', function() {
-        let newLocationId = $(this).parent().parent().find('select').val();
-        let slideId = $(this).parent().parent().find('.slide_id').val();
-        
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': window.csrf_token
-            }
-        });
-        let  request = $.ajax({
-            url: window.copySlideRoute,
-            method: 'post',
-            data: {locationId: newLocationId, slideId: slideId},
-            dataType: 'json',
-            success: function(result){
-                if(result.success == 'ok') {
-                    $('.modal-copy-slide').modal('hide');
-                    Swal.fire("Uspešno kopirano!", "", "success");
-                }
-            }
-        });
-
-    });
-    $('body').on('click', '.remove-slide', function(event) {
-        let slideId = $(this).attr('id');
-        Swal.fire({
-            title: "Želiš da izbrišes slide?",
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: "Da",
-            denyButtonText: `Ne`,
-            icon: "question"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('body').find('form#'+slideId).submit();
-            }
-        });
-        event.preventDefault();
-
-    });
-
-    $('body').on('click', '.copy-slide', function() {
-        let slideId = $(this).attr('id');
-        $('.modal-copy-slide').find('.slide_id').val(slideId);
-        $('.modal-copy-slide').modal('show');
-    });
 });

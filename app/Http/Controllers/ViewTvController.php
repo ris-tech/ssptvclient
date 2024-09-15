@@ -95,6 +95,27 @@ class ViewTvController extends Controller
         
     }
 
+    public function getContent($content) {
+        $expContent = explode("\n",$content);
+        $str = '';
+        foreach($expContent as $idx => $lines) {
+            if($idx > 1) {
+                $str = $str.'<br>'.$lines;
+            } elseif($idx == 1) {
+                $str = $lines;
+            }
+        }
+        return $str;
+       
+    }
+
+    public function first_sentence($content) {
+        $expContent = explode("\n",$content);
+        
+        return $expContent[0];
+       
+    }
+
     public function NewData() : JsonResponse 
     {
 
@@ -161,13 +182,16 @@ class ViewTvController extends Controller
         $sorting = 0;
         $sortingImages = 0;
 
+       
+
         foreach($fbSlides as $fbSlide) {
             $getCurrentFbSlide = DB::table('slides')->where('originalId', $fbSlide['post_id'])->first();
             if($getCurrentFbSlide != null) {
                 $fbSlideId = $getCurrentFbSlide->id;
                 if($getCurrentFbSlide->slide_content != $fbSlide['message']) {
                     DB::table('slides')->where('originalId', $fbSlide['post_id'])->update([
-                        'slide_content' => $fbSlide['message']
+                        'slide_title' => $this->first_sentence($fbSlide['message']),
+                        'slide_content' => $this->getContent($fbSlide['message'])
                     ]);
                 }                
             } else {
@@ -175,8 +199,8 @@ class ViewTvController extends Controller
                     'originalId' => $fbSlide['post_id'],
                     'location_id' => $location['id'],
                     'tv_id' => $tv['id'],
-                    'slide_content' => $fbSlide['message'],
-                    'slide_title' => '',
+                    'slide_content' => $this->getContent($fbSlide['message']),
+                    'slide_title' => $this->first_sentence($fbSlide['message']),
                     'sorting' => 0,
                 ]);
                 $newSlideData = true;
