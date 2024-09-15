@@ -18,4 +18,4 @@ yarn-error.log
 /.vscode
 /public/images/uploads/fb
 /public/images/uploads
-/public/img
+/public/img/uploads/*.*
