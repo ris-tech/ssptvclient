@@ -58,7 +58,7 @@ class getDataFromServer implements ShouldQueue
         $ch = curl_init();
 
         $optArray = array(
-            CURLOPT_URL => 'http://muptv.local/api/ssp/'.env('APP_SSP_URL'),
+            CURLOPT_URL => env('APP_SERVER_URL').'/api/ssp/'.env('APP_SSP_URL'),
             CURLOPT_RETURNTRANSFER => true
         );
 

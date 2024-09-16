@@ -125,7 +125,7 @@ class ViewTvController extends Controller
         $ch = curl_init();
 
         $optArray = array(
-            CURLOPT_URL => 'http://muptv.local/api/ssp/loznica',
+            CURLOPT_URL => env('APP_SERVER_URL').'/api/ssp/'.env('APP_SSP_URL'),
             CURLOPT_RETURNTRANSFER => true
         );
 
@@ -147,7 +147,7 @@ class ViewTvController extends Controller
         $newData = false;
 
 
-        $getLocation = Location::where('name', 'loznica')->first();
+        $getLocation = Location::where('name', env('APP_SSP_URL'))->first();
         
         if($getLocation->name != $location['name']) { $newData = true; }
         if($getLocation->street != $location['street']) { $newData = true; }
