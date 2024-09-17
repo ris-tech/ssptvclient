@@ -370,6 +370,8 @@ class ViewTvController extends Controller
             } else {
                 return response()->json(['status' => 'no']);
             }
+        } else {    
+            return response()->json(['status' => 'no']);
         }
 
     }
