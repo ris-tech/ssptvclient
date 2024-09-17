@@ -136,237 +136,240 @@ class ViewTvController extends Controller
         
         curl_setopt_array($ch, $optArray);
         $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if($httpcode==200)
+        {
+            $processed = json_decode($result, true);
         
-        $processed = json_decode($result, true);
-       
-        $serverURL = $processed['url'];
-        $imageURL = $processed['image_url'];
-        $tv = $processed['tv'];
-        $location = $processed['location'];
-        $slides = $processed['slides'];
-        $slideImages = $processed['slideImages'];
-        $fbSlides = $processed['fbSlides'];
-        $fbPostImages = $processed['fbPostImages'];
-        $weather = $processed['weather'];
-        $newData = false;
+            $serverURL = $processed['url'];
+            $imageURL = $processed['image_url'];
+            $tv = $processed['tv'];
+            $location = $processed['location'];
+            $slides = $processed['slides'];
+            $slideImages = $processed['slideImages'];
+            $fbSlides = $processed['fbSlides'];
+            $fbPostImages = $processed['fbPostImages'];
+            $weather = $processed['weather'];
+            $newData = false;
 
-        dd(env('APP_SSP_URL'));
-        $getLocation = Location::where('name', env('APP_SSP_URL'))->first();
-        
-        if($getLocation->name != $location['name']) { $newData = true; }
-        if($getLocation->street != $location['street']) { $newData = true; }
-        if($getLocation->streetno != $location['streetno']) { $newData = true; }
-        if($getLocation->postalcode != $location['postalcode']) { $newData = true; }
-        if($getLocation->city != $location['city']) { $newData = true; }
-        if($getLocation->detail != $location['detail']) { $newData = true; }
-        if($getLocation->tv_marquee != $location['tv_marquee']) { $newData = true; }
-        if($getLocation->details != $location['details']) { $newData = true; }
+            dd(env('APP_SSP_URL'));
+            $getLocation = Location::where('name', env('APP_SSP_URL'))->first();
+            
+            if($getLocation->name != $location['name']) { $newData = true; }
+            if($getLocation->street != $location['street']) { $newData = true; }
+            if($getLocation->streetno != $location['streetno']) { $newData = true; }
+            if($getLocation->postalcode != $location['postalcode']) { $newData = true; }
+            if($getLocation->city != $location['city']) { $newData = true; }
+            if($getLocation->detail != $location['detail']) { $newData = true; }
+            if($getLocation->tv_marquee != $location['tv_marquee']) { $newData = true; }
+            if($getLocation->details != $location['details']) { $newData = true; }
 
-        if($newData) {
-            $addLocation = Location::updateOrInsert(
-                ['id' => $location['id']],
-                [
-                'id' => $location['id'],
-                'name' => $location['name'],
-                'street' => $location['street'],
-                'streetno' => $location['streetno'],
-                'postalcode' => $location['postalcode'],
-                'city' => $location['city'],
-                'detail' => $location['detail'],
-                'tv_marquee' => $location['tv_marquee'],
-                'details' => $location['details']
-            ]);
-        }
-        $newSlideData = false;
-        $newSlideImageData = false;
-        $erasedSlideImagesState = false;
-
-        
-
-        $sorting = 0;
-        $sortingImages = 0;
-
-       
-
-        foreach($fbSlides as $fbSlide) {
-            $getCurrentFbSlide = DB::table('slides')->where('originalId', $fbSlide['post_id'])->first();
-            if($getCurrentFbSlide != null) {
-                $fbSlideId = $getCurrentFbSlide->id;
-                if($getCurrentFbSlide->slide_content != $fbSlide['message']) {
-                    DB::table('slides')->where('originalId', $fbSlide['post_id'])->update([
-                        'slide_title' => $this->first_sentence($fbSlide['message']),
-                        'slide_content' => $this->getContent($fbSlide['message'])
-                    ]);
-                }                
-            } else {
-                $cntSlides = Slide::where('fb', true)->count();
-                if($cntSlides == 5) {
-                    $getFirstSlide = Slide::where('fb', true)->first();
-                    $getFirstSlideImages = SlideImage::where('slide_id', $getFirstSlide->id)->get();
-                    foreach($getFirstSlideImages as $images) {
-                        Storage::disk('images')->delete($images->tv_img);
-                        SlideImage::where('id', $images->id)->delete();
-                    }
-                    Slide::where('id', $getFirstSlide->id)->delete();
-                    $fbSlideId = DB::table('slides')->insertGetId([
-                        'originalId' => $fbSlide['post_id'],
-                        'permalink' => $fbSlide['permalink'],
-                        'location_id' => $location['id'],
-                        'tv_id' => $tv['id'],
-                        'slide_content' => $this->getContent($fbSlide['message']),
-                        'slide_title' => $this->first_sentence($fbSlide['message']),
-                        'fb' => true,
-                        'sorting' => 0,
-                    ]);
-                    $newSlideData = true;
-                } elseif($cntSlides < 5) {
-                    $fbSlideId = DB::table('slides')->insertGetId([
-                        'originalId' => $fbSlide['post_id'],
-                        'permalink' => $fbSlide['permalink'],
-                        'location_id' => $location['id'],
-                        'tv_id' => $tv['id'],
-                        'slide_content' => $this->getContent($fbSlide['message']),
-                        'slide_title' => $this->first_sentence($fbSlide['message']),
-                        'fb' => true,
-                        'sorting' => 0,
-                    ]);
-                    $newSlideData = true;
-                }
+            if($newData) {
+                $addLocation = Location::updateOrInsert(
+                    ['id' => $location['id']],
+                    [
+                    'id' => $location['id'],
+                    'name' => $location['name'],
+                    'street' => $location['street'],
+                    'streetno' => $location['streetno'],
+                    'postalcode' => $location['postalcode'],
+                    'city' => $location['city'],
+                    'detail' => $location['detail'],
+                    'tv_marquee' => $location['tv_marquee'],
+                    'details' => $location['details']
+                ]);
             }
-            
+            $newSlideData = false;
+            $newSlideImageData = false;
+            $erasedSlideImagesState = false;
+
             
 
-            foreach($fbPostImages as $fbPostImage) {
-                if($fbPostImage['post_id'] == $fbSlide['post_id']) {
-                    $getCurrentFbSlideImage = DB::table('slide_images')->where('tv_img', $fbPostImage['attachment'])->first();
-                    if($getCurrentFbSlideImage == NULL) {
-                        SlideImage::Insert([
+            $sorting = 0;
+            $sortingImages = 0;
+
+        
+
+            foreach($fbSlides as $fbSlide) {
+                $getCurrentFbSlide = DB::table('slides')->where('originalId', $fbSlide['post_id'])->first();
+                if($getCurrentFbSlide != null) {
+                    $fbSlideId = $getCurrentFbSlide->id;
+                    if($getCurrentFbSlide->slide_content != $fbSlide['message']) {
+                        DB::table('slides')->where('originalId', $fbSlide['post_id'])->update([
+                            'slide_title' => $this->first_sentence($fbSlide['message']),
+                            'slide_content' => $this->getContent($fbSlide['message'])
+                        ]);
+                    }                
+                } else {
+                    $cntSlides = Slide::where('fb', true)->count();
+                    if($cntSlides == 5) {
+                        $getFirstSlide = Slide::where('fb', true)->first();
+                        $getFirstSlideImages = SlideImage::where('slide_id', $getFirstSlide->id)->get();
+                        foreach($getFirstSlideImages as $images) {
+                            Storage::disk('images')->delete($images->tv_img);
+                            SlideImage::where('id', $images->id)->delete();
+                        }
+                        Slide::where('id', $getFirstSlide->id)->delete();
+                        $fbSlideId = DB::table('slides')->insertGetId([
+                            'originalId' => $fbSlide['post_id'],
+                            'permalink' => $fbSlide['permalink'],
                             'location_id' => $location['id'],
                             'tv_id' => $tv['id'],
-                            'slide_id' => $fbSlideId,
-                            'tv_img' => $fbPostImage['attachment'],
-                            'sorting' => $sortingImages,
+                            'slide_content' => $this->getContent($fbSlide['message']),
+                            'slide_title' => $this->first_sentence($fbSlide['message']),
+                            'fb' => true,
+                            'sorting' => 0,
                         ]);
-                        $sortingImages++;
-                        $url = $serverURL.'/images/uploads/fb/'.$fbPostImage['attachment']; 
-                        $file_name = $fbPostImage['attachment']; 
+                        $newSlideData = true;
+                    } elseif($cntSlides < 5) {
+                        $fbSlideId = DB::table('slides')->insertGetId([
+                            'originalId' => $fbSlide['post_id'],
+                            'permalink' => $fbSlide['permalink'],
+                            'location_id' => $location['id'],
+                            'tv_id' => $tv['id'],
+                            'slide_content' => $this->getContent($fbSlide['message']),
+                            'slide_title' => $this->first_sentence($fbSlide['message']),
+                            'fb' => true,
+                            'sorting' => 0,
+                        ]);
+                        $newSlideData = true;
+                    }
+                }
+                
+                
+
+                foreach($fbPostImages as $fbPostImage) {
+                    if($fbPostImage['post_id'] == $fbSlide['post_id']) {
+                        $getCurrentFbSlideImage = DB::table('slide_images')->where('tv_img', $fbPostImage['attachment'])->first();
+                        if($getCurrentFbSlideImage == NULL) {
+                            SlideImage::Insert([
+                                'location_id' => $location['id'],
+                                'tv_id' => $tv['id'],
+                                'slide_id' => $fbSlideId,
+                                'tv_img' => $fbPostImage['attachment'],
+                                'sorting' => $sortingImages,
+                            ]);
+                            $sortingImages++;
+                            $url = $serverURL.'/images/uploads/fb/'.$fbPostImage['attachment']; 
+                            $file_name = $fbPostImage['attachment']; 
+                            
+                            $imagePath = public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads').DIRECTORY_SEPARATOR;
                         
-                        $imagePath = public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads').DIRECTORY_SEPARATOR;
-                    
-                        if (file_put_contents($imagePath.$file_name, file_get_contents($url))) 
-                        { 
-                            Log::build([
-                                'driver' => 'single',
-                                'path' => storage_path('logs/getDataFromServer.log'),
-                            ])->info('File downloaded successfully: '.$file_name);
-                            $newSlideImageData = false;
-                        } 
-                        else
-                        { 
-                            Log::build([
-                                'driver' => 'single',
-                                'path' => storage_path('logs/getDataFromServer.log'),
-                            ])->error('File download Failed');
-                        } 
+                            if (file_put_contents($imagePath.$file_name, file_get_contents($url))) 
+                            { 
+                                Log::build([
+                                    'driver' => 'single',
+                                    'path' => storage_path('logs/getDataFromServer.log'),
+                                ])->info('File downloaded successfully: '.$file_name);
+                                $newSlideImageData = false;
+                            } 
+                            else
+                            { 
+                                Log::build([
+                                    'driver' => 'single',
+                                    'path' => storage_path('logs/getDataFromServer.log'),
+                                ])->error('File download Failed');
+                            } 
+                        }
+                    }
+                }
+                
+            }
+
+            
+            foreach($slides as $slide) {
+                $getCurrentSlide = DB::table('slides')->where('originalId', $slide['id'])->first();
+            
+                if($getCurrentSlide != null) {
+                    $slideId = $getCurrentSlide->id;
+                    if($getCurrentSlide->slide_content != $slide['slide_content']) {                    
+                        DB::table('slides')->insertGetId(
+                        [
+                            'slide_content' => $slide['slide_content'],
+                            'slide_title' => $slide['slide_title']
+                        ]);
+                    }
+                } else {
+                    $slideId = DB::table('slides')->insertGetId(
+                        [
+                        'originalId' => $slide['id'],
+                        'location_id' => $slide['location_id'],
+                        'tv_id' => $slide['tv_id'],
+                        'slide_content' => $slide['slide_content'],
+                        'slide_title' => $slide['slide_title'],
+                        'sorting' => $sorting,
+                    ]);
+                    $newSlideData = true;
+                    $sorting++;
+                }
+
+                foreach($slideImages as $slideImage) {
+                    if($slideImage['slide_id'] == $slide['id']) {
+                        $getCurrentSlideImage = DB::table('slide_images')->where('tv_img', $slideImage['tv_img'])->first();
+                        if($getCurrentSlideImage == NULL) {
+                            $addSlideImage = DB::table('slide_images')->insertGetId([
+                                'location_id' => $slideImage['location_id'],
+                                'tv_id' => $slideImage['tv_id'],
+                                'slide_id' => $slideId,
+                                'tv_img' => $slideImage['tv_img'],
+                                'sorting' => $sortingImages,
+                            ]);
+                            $sortingImages++;
+                            $newSlideImageData = true;
+                            
+                            $url = $imageURL.$slideImage['tv_img']; 
+                            $file_name = basename($url); 
+
+                            $imagePath = public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads').DIRECTORY_SEPARATOR;
+
+                            if (file_put_contents($imagePath.$file_name, file_get_contents($url))) 
+                            { 
+                                Log::build([
+                                    'driver' => 'single',
+                                    'path' => storage_path('logs/getDataFromServer.log'),
+                                ])->info('ile downloaded successfully: '.$file_name);
+                            } 
+                            else
+                            { 
+                                Log::build([
+                                    'driver' => 'single',
+                                    'path' => storage_path('logs/getDataFromServer.log'),
+                                ])->error('File download Failed');
+                            } 
+                        }
                     }
                 }
             }
             
-        }
 
-        
-        foreach($slides as $slide) {
-            $getCurrentSlide = DB::table('slides')->where('originalId', $slide['id'])->first();
-           
-            if($getCurrentSlide != null) {
-                $slideId = $getCurrentSlide->id;
-                if($getCurrentSlide->slide_content != $slide['slide_content']) {                    
-                    DB::table('slides')->insertGetId(
+
+            foreach($weather as $weatherData) {
+                $addWeather = Weather::updateOrInsert(
+                    ['id' => $weatherData['id']],
                     [
-                        'slide_content' => $slide['slide_content'],
-                        'slide_title' => $slide['slide_title']
-                    ]);
-                }
-            } else {
-                $slideId = DB::table('slides')->insertGetId(
-                    [
-                    'originalId' => $slide['id'],
-                    'location_id' => $slide['location_id'],
-                    'tv_id' => $slide['tv_id'],
-                    'slide_content' => $slide['slide_content'],
-                    'slide_title' => $slide['slide_title'],
-                    'sorting' => $sorting,
+                    'id' => $weatherData['id'],
+                    'location_id' => $weatherData['location_id'],
+                    'vreme' => $weatherData['vreme'],
+                    'icon' => $weatherData['icon'],
+                    'vremetext' => $weatherData['vremetext'],
+                    'stepeni' => $weatherData['stepeni'],
                 ]);
-                $newSlideData = true;
-                $sorting++;
             }
 
-            foreach($slideImages as $slideImage) {
-                if($slideImage['slide_id'] == $slide['id']) {
-                    $getCurrentSlideImage = DB::table('slide_images')->where('tv_img', $slideImage['tv_img'])->first();
-                    if($getCurrentSlideImage == NULL) {
-                        $addSlideImage = DB::table('slide_images')->insertGetId([
-                            'location_id' => $slideImage['location_id'],
-                            'tv_id' => $slideImage['tv_id'],
-                            'slide_id' => $slideId,
-                            'tv_img' => $slideImage['tv_img'],
-                            'sorting' => $sortingImages,
-                        ]);
-                        $sortingImages++;
-                        $newSlideImageData = true;
-                        
-                        $url = $imageURL.$slideImage['tv_img']; 
-                        $file_name = basename($url); 
+            $erasedSlidesState = false;
+            
+            
+            if($newData) { $what = 'newData'; }
+            if($newSlideData) { $what = 'newSlideData'; }
+            if($newSlideImageData) { $what = 'newSlideImageData'; }
+            if($erasedSlidesState) { $what = 'erasedSlidesState'; }
+            if($erasedSlideImagesState) { $what = 'erasedSlideImagesState'; }
 
-                        $imagePath = public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads').DIRECTORY_SEPARATOR;
-
-                        if (file_put_contents($imagePath.$file_name, file_get_contents($url))) 
-                        { 
-                            Log::build([
-                                'driver' => 'single',
-                                'path' => storage_path('logs/getDataFromServer.log'),
-                            ])->info('ile downloaded successfully: '.$file_name);
-                        } 
-                        else
-                        { 
-                            Log::build([
-                                'driver' => 'single',
-                                'path' => storage_path('logs/getDataFromServer.log'),
-                            ])->error('File download Failed');
-                        } 
-                    }
-                }
+            if($newData || $newSlideData || $newSlideImageData || $erasedSlidesState || $erasedSlideImagesState) {
+                return response()->json(['status' => 'yes', 'what' => $what]);
+            } else {
+                return response()->json(['status' => 'no']);
             }
-        }
-        
-
-
-        foreach($weather as $weatherData) {
-            $addWeather = Weather::updateOrInsert(
-                ['id' => $weatherData['id']],
-                [
-                'id' => $weatherData['id'],
-                'location_id' => $weatherData['location_id'],
-                'vreme' => $weatherData['vreme'],
-                'icon' => $weatherData['icon'],
-                'vremetext' => $weatherData['vremetext'],
-                'stepeni' => $weatherData['stepeni'],
-            ]);
-        }
-
-        $erasedSlidesState = false;
-        
-        
-        if($newData) { $what = 'newData'; }
-        if($newSlideData) { $what = 'newSlideData'; }
-        if($newSlideImageData) { $what = 'newSlideImageData'; }
-        if($erasedSlidesState) { $what = 'erasedSlidesState'; }
-        if($erasedSlideImagesState) { $what = 'erasedSlideImagesState'; }
-
-        if($newData || $newSlideData || $newSlideImageData || $erasedSlidesState || $erasedSlideImagesState) {
-            return response()->json(['status' => 'yes', 'what' => $what]);
-        } else {
-            return response()->json(['status' => 'no']);
         }
 
     }

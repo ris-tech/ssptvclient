@@ -283,14 +283,16 @@ $(document).ready(function () {
                 let slideContent = nl2br(result[0].slide_content);
                 let permalink = result[0].permalink;
                 $('body').find('.qrcode').html('');
-                new QRCode("qrcode", {
-                    text: permalink,
-                    width: 150,
-                    height: 150,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H,
-                  });
+                if(permalink != null) {                
+                    new QRCode("qrcode", {
+                        text: permalink,
+                        width: 150,
+                        height: 150,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H,
+                    });
+                }
                 //$('body').find('.qrcode').html(qrcode);
                 $('body').find('.slideTitle').html(slideTitle);
                 console.log('slideTitle: '+slideTitle.length);
