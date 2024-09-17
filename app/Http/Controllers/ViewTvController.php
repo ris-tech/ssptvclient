@@ -13,6 +13,8 @@ use App\Models\Weather;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ViewTvController extends Controller
 {
@@ -79,16 +81,19 @@ class ViewTvController extends Controller
             $tvs = Tv::where('location_id', $locationdata->id)->first();
             $locations = Location::where('id', $locationdata->id)->first();
 
-            $slides = Slide::where('tv_id', $tvs->id)->with('slideImages')->get();
-            $slides = Slide::get();
+            $slides = Slide::where('tv_id', $tvs->id)->with('slideImages')->orderBy('fb', 'desc')->orderBy('id', 'asc')->get();
+            
             $slideIds = '';
             foreach($slides as $slide) {
                 if($slideIds == '') {
                     $slideIds = $slide->id;
+                    //$qrCodes = QrCode::size(150)->style('square')->generate($slide->permalink);
+                    //dd($qrCodes);
                 } else {
                     $slideIds = $slideIds.'|'.$slide->id;
                 }
             }
+
             return view('view', ["location" => $locationdata->id, "tv_marquee" => $locationdata->tv_marquee], compact('tvs', 'slides','slideIds'));
         }
 
@@ -128,13 +133,12 @@ class ViewTvController extends Controller
             CURLOPT_URL => env('APP_SERVER_URL').'/api/ssp/'.env('APP_SSP_URL'),
             CURLOPT_RETURNTRANSFER => true
         );
-
         
         curl_setopt_array($ch, $optArray);
         $result = curl_exec($ch);
         
         $processed = json_decode($result, true);
-        
+       
         $serverURL = $processed['url'];
         $imageURL = $processed['image_url'];
         $tv = $processed['tv'];
@@ -146,7 +150,7 @@ class ViewTvController extends Controller
         $weather = $processed['weather'];
         $newData = false;
 
-
+        dd(env('APP_SSP_URL'));
         $getLocation = Location::where('name', env('APP_SSP_URL'))->first();
         
         if($getLocation->name != $location['name']) { $newData = true; }
@@ -195,15 +199,39 @@ class ViewTvController extends Controller
                     ]);
                 }                
             } else {
-                $fbSlideId = DB::table('slides')->insertGetId([
-                    'originalId' => $fbSlide['post_id'],
-                    'location_id' => $location['id'],
-                    'tv_id' => $tv['id'],
-                    'slide_content' => $this->getContent($fbSlide['message']),
-                    'slide_title' => $this->first_sentence($fbSlide['message']),
-                    'sorting' => 0,
-                ]);
-                $newSlideData = true;
+                $cntSlides = Slide::where('fb', true)->count();
+                if($cntSlides == 5) {
+                    $getFirstSlide = Slide::where('fb', true)->first();
+                    $getFirstSlideImages = SlideImage::where('slide_id', $getFirstSlide->id)->get();
+                    foreach($getFirstSlideImages as $images) {
+                        Storage::disk('images')->delete($images->tv_img);
+                        SlideImage::where('id', $images->id)->delete();
+                    }
+                    Slide::where('id', $getFirstSlide->id)->delete();
+                    $fbSlideId = DB::table('slides')->insertGetId([
+                        'originalId' => $fbSlide['post_id'],
+                        'permalink' => $fbSlide['permalink'],
+                        'location_id' => $location['id'],
+                        'tv_id' => $tv['id'],
+                        'slide_content' => $this->getContent($fbSlide['message']),
+                        'slide_title' => $this->first_sentence($fbSlide['message']),
+                        'fb' => true,
+                        'sorting' => 0,
+                    ]);
+                    $newSlideData = true;
+                } elseif($cntSlides < 5) {
+                    $fbSlideId = DB::table('slides')->insertGetId([
+                        'originalId' => $fbSlide['post_id'],
+                        'permalink' => $fbSlide['permalink'],
+                        'location_id' => $location['id'],
+                        'tv_id' => $tv['id'],
+                        'slide_content' => $this->getContent($fbSlide['message']),
+                        'slide_title' => $this->first_sentence($fbSlide['message']),
+                        'fb' => true,
+                        'sorting' => 0,
+                    ]);
+                    $newSlideData = true;
+                }
             }
             
             

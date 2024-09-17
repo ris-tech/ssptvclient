@@ -15,6 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class getDataFromServer implements ShouldQueue
 {
@@ -104,6 +105,29 @@ class getDataFromServer implements ShouldQueue
         //Slide::truncate();
         $sorting = 0;
         $sortingImages = 0;
+
+        $ids = [];
+
+        foreach($fbSlides as $fbSlide) {
+                $ids[] = $fbSlide['post_id'];
+        }
+
+        foreach($slides as $slide) {
+            $ids[] = $slide['id'];
+        }
+        
+        $slidesNotInDB = Slide::whereNotIn('originalId', $ids)->get();
+
+        foreach($slidesNotInDB as $slide) {
+            
+            $slide_images = SlideImage::where('slide_id', $slide->id)->get();
+          
+            foreach($slide_images as $slide_image) {
+                Storage::disk('images')->delete($slide_image->tv_img);
+                SlideImage::where('slide_id', $slide->id)->delete();
+            }
+            Slide::where('id', $slide->id)->delete();
+        }
         
         foreach($fbSlides as $fbSlide) {
             $getCurrentFbSlide = DB::table('slides')->where('originalId', $fbSlide['post_id'])->first();
@@ -118,10 +142,12 @@ class getDataFromServer implements ShouldQueue
             } else {
                 $fbSlideId = DB::table('slides')->insertGetId([
                     'originalId' => $fbSlide['post_id'],
+                    'permalink' => $fbSlide['permalink'],
                     'location_id' => $location['id'],
                     'tv_id' => $tv['id'],
                     'slide_content' => $this->getContent($fbSlide['message']),
                     'slide_title' => $this->first_sentence($fbSlide['message']),
+                    'fb' => true,
                     'sorting' => 0,
                 ]);
                 $newSlideData = true;
@@ -141,7 +167,7 @@ class getDataFromServer implements ShouldQueue
                             'sorting' => $sortingImages,
                         ]);
                         $sortingImages++;
-                        $url = $serverURL.'/assets/img/uploads/fb/'.$fbPostImage['attachment']; 
+                        $url = $serverURL.'/images/uploads/fb/'.$fbPostImage['attachment']; 
                         $file_name = $fbPostImage['attachment']; 
                         
                         $imagePath = public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads').DIRECTORY_SEPARATOR;
@@ -167,14 +193,13 @@ class getDataFromServer implements ShouldQueue
             
         }
 
-        
         foreach($slides as $slide) {
             $getCurrentSlide = DB::table('slides')->where('originalId', $slide['id'])->first();
            
             if($getCurrentSlide != null) {
                 $slideId = $getCurrentSlide->id;
                 if($getCurrentSlide->slide_content != $slide['slide_content']) {                    
-                    DB::table('slides')->insertGetId(
+                    DB::table('slides')->where('originalId', $slide['id'])->update(
                     [
                         'slide_content' => $slide['slide_content'],
                         'slide_title' => $slide['slide_title']
@@ -212,7 +237,9 @@ class getDataFromServer implements ShouldQueue
                         $file_name = basename($url); 
 
                         $imagePath = public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads').DIRECTORY_SEPARATOR;
-
+                        
+                        
+                        
                         if (file_put_contents($imagePath.$file_name, file_get_contents($url))) 
                         { 
                             Log::build([

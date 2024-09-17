@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap-icons.min.css')}}" />
 
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('assets/js/qrcode.js')}}"></script>
     <script>
         window.tvLocationId = '{{$tvs->location_id}}';
         window.tvLocationName = '{{$tvs->location->city}}';

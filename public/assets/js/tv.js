@@ -193,7 +193,7 @@ $(document).ready(function () {
                 }
             });
         } else {
-                   
+            console.log('Is Offliney<');
         }
         
         setTimeout(() => {
@@ -277,9 +277,21 @@ $(document).ready(function () {
             async: true,
             dataType: 'json',
             success: function(result){ 
+                console.log(result);
                 let timeToRead = 5000;
                 let slideTitle = result[0].slide_title;
                 let slideContent = nl2br(result[0].slide_content);
+                let permalink = result[0].permalink;
+                $('body').find('.qrcode').html('');
+                new QRCode("qrcode", {
+                    text: permalink,
+                    width: 150,
+                    height: 150,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H,
+                  });
+                //$('body').find('.qrcode').html(qrcode);
                 $('body').find('.slideTitle').html(slideTitle);
                 console.log('slideTitle: '+slideTitle.length);
                 $('body').find('.slideContent').html(slideContent);

@@ -20,6 +20,9 @@
                             </div>
                         </div>
                     </div>
+                    <div id="qrcode" class="position-absolute qrcode" style="height: 150px;width:150px;bottom: 12%;right: 20px; z-index:9999999;">
+                        Test
+                    </div>
                     <div class="row m-0 p-0 position-absolute bottom-0 w-100" style="margin-bottom:0;margin-left:0;background-color: rgba(0,0,255,0.7);bottom: 0px;height: 10%;">
                         <div class="col text-light fw-bold fs-3 pt-3">
                             <marquee>@if ($tv_marquee != NULL) 
