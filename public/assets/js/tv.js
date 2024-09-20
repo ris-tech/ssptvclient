@@ -383,7 +383,7 @@ $(document).ready(function () {
             }
             timeoutId[slideId] = setTimeout(() => {
                 startSlideImages(slideImages, slideImagesCnt, slideId, false);
-            }, 2000);
+            }, 7000);
         }
 
     }
