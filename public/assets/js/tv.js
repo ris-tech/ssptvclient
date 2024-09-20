@@ -308,7 +308,7 @@ $(document).ready(function () {
                     timeToRead = (geek.length/238)*60*600;
                 }
                 if(timeToRead < 5000) {
-                    timeToRead = 2000;  
+                    timeToRead = 5000;  
                 }
                 console.log('timeToRead: '+timeToRead);
                 
@@ -346,8 +346,8 @@ $(document).ready(function () {
                         }
                         startSlideShow(slideId);   
                         
-                    }, timeToRead+100);
-                }, 100);
+                    }, timeToRead+5000);
+                }, 5000);
             }
         });
     }

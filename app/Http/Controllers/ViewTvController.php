@@ -134,7 +134,7 @@ class ViewTvController extends Controller
             CURLOPT_RETURNTRANSFER => true
         );
         
-        curl_setopt_array($ch, $optArray);
+        curl_setopt_array($ch, $optArray); 
         $result = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if($httpcode==200)

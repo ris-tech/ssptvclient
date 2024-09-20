@@ -66,7 +66,7 @@ class getDataFromServer implements ShouldQueue
         curl_setopt_array($ch, $optArray);
         $result = curl_exec($ch);
         $processed = json_decode($result, true);
-        
+         
         $serverURL = $processed['url'];
         $imageURL = $processed['image_url'];
         $tv = $processed['tv'];
