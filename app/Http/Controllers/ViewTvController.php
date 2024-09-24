@@ -131,6 +131,8 @@ class ViewTvController extends Controller
 
         $optArray = array(
             CURLOPT_URL => config('ssptvconfig.APP_SERVER_URL').'/api/ssp/'.config('ssptvconfig.APP_SSP_URL'),
+            CURLOPT_CONNECTTIMEOUT => 60,
+            CURLOPT_TIMEOUT => 120,
             CURLOPT_RETURNTRANSFER => true
         );
 
@@ -141,8 +143,13 @@ class ViewTvController extends Controller
         $result = curl_exec($ch);
         
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if(!$result)
+        {
+            return response()->json(['status' => 'exec failed']);
+        }
       
-        if($httpcode==200)
+        if($httpcode < 400)
         {
             $processed = json_decode($result, true);
         
@@ -378,7 +385,7 @@ class ViewTvController extends Controller
                 return response()->json(['status' => 'no']);
             }
         } else {    
-            return response()->json(['status' => 'no']);
+            return response()->json(['status' => 'no Response']);
         }
 
     }
