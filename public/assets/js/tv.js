@@ -99,9 +99,9 @@ $(document).ready(function () {
         crossDomain: true,
         dataType: 'json',
         success: function(result){   
-            console.log('Weather');
-            console.log(result);
-            console.log(result.length);
+            //console.log('Weather');
+            //console.log(result);
+            //console.log(result.length);
             if(typeof result.length === "undefined") {
                 $('.weather-desc').html(latinToCyrillic('Nema podataka'));
             } else {
@@ -152,11 +152,11 @@ $(document).ready(function () {
     let currSlideNo = 99;
     let crrSlide = 0;
     
-    console.log('slideIds: '+slideIds);
+    //console.log('slideIds: '+slideIds);
     const slideArr = slideIds.split('|');
     const slideArrCnt = slideArr.length;
-    console.log('slideArrCnt: '+slideArrCnt);
-    console.log(slideArr);
+    //console.log('slideArrCnt: '+slideArrCnt);
+    //console.log(slideArr);
 
     function isInternetConnected(){
         if(navigator.onLine) {
@@ -198,7 +198,7 @@ $(document).ready(function () {
         
         setTimeout(() => {
             chkNewData();
-        }, 60000);
+        }, 60000);0
     }
 
     chkNewData();
@@ -277,7 +277,7 @@ $(document).ready(function () {
             async: true,
             dataType: 'json',
             success: function(result){ 
-                console.log(result);
+                //console.log(result);
                 let timeToRead = 5000;
                 let slideTitle = result[0].slide_title;
                 let slideContent = nl2br(result[0].slide_content);
@@ -295,10 +295,10 @@ $(document).ready(function () {
                 }
                 //$('body').find('.qrcode').html(qrcode);
                 $('body').find('.slideTitle').html(slideTitle);
-                console.log('slideTitle: '+slideTitle.length);
+                //console.log('slideTitle: '+slideTitle.length);
                 $('body').find('.slideContent').html(slideContent);
                 slideImages = result[0].slide_images;
-                console.log(slideImages);
+                //console.log(slideImages);
                 let slideImagesCnt = slideImages.length;
                 let contentLen = slideContent.length;
                 if(contentLen != 0) { 
@@ -310,12 +310,12 @@ $(document).ready(function () {
                 if(timeToRead < 5000) {
                     timeToRead = 5000;  
                 }
-                console.log('timeToRead: '+timeToRead);
+                //console.log('timeToRead: '+timeToRead);
                 
                 if(slideImagesCnt > 0) {
-                    console.log('slideImagesCnt: '+slideImagesCnt);
+                    //console.log('slideImagesCnt: '+slideImagesCnt);
                     newId = slideId;
-                    console.log('newId: '+newId+' oldId: '+oldId);
+                    //console.log('newId: '+newId+' oldId: '+oldId);
                     if(oldId != newId) {
                             clearTimeout(timeoutId[oldId]);
                             currImage = 0;
@@ -335,11 +335,11 @@ $(document).ready(function () {
                         }, timeToRead);
                     });
                     setTimeout(function () {
-                        console.log('slideArrCnt in slide: '+slideArrCnt);
-                        console.log(slideId);
+                        //console.log('slideArrCnt in slide: '+slideArrCnt);
+                        //console.log(slideId);
                         slideId++;
                         let crrSlideId = slideId+1;
-                        console.log('crrSlideId: '+crrSlideId);
+                        //console.log('crrSlideId: '+crrSlideId);
                         
                         if(slideArrCnt < crrSlideId) {
                             slideId = 0;
@@ -355,9 +355,9 @@ $(document).ready(function () {
     let currImage = 0;
 
     function startSlideImages(slideImages, slideImagesCnt, slideId, start) {
-        console.log('startSlideImages');
-        console.log('currImage: '+currImage);
-        console.log('slideImagesCnt: '+slideImagesCnt);
+        //console.log('startSlideImages');
+        //console.log('currImage: '+currImage);
+        //console.log('slideImagesCnt: '+slideImagesCnt);
         
         if(start) {
             currImage = 0;
@@ -368,7 +368,7 @@ $(document).ready(function () {
         } else {
             start = false;
             oldImage = currImage-1;
-            console.log('oldImage: '+oldImage+' currImage: '+currImage);
+            //console.log('oldImage: '+oldImage+' currImage: '+currImage);
             $.when($('body').find('img#'+oldImage).fadeOut()).then(function () {
                 $('.slide-images').html('<img id="'+currImage+'" src="'+imgPath+'/uploads/'+slideImages[currImage].tv_img+'" style="position:absolute;width:100%;height:100%;object-fit:contain;display:none;">');
                 $('body').find('img#'+currImage).fadeIn();
@@ -377,7 +377,7 @@ $(document).ready(function () {
         }
         
         if(slideImagesCnt > 1) {
-            console.log('slideImagesCnt: '+slideImagesCnt+' currImage: '+currImage);
+            //console.log('slideImagesCnt: '+slideImagesCnt+' currImage: '+currImage);
             if(slideImagesCnt == currImage) {
                 currImage = 0;
             }
