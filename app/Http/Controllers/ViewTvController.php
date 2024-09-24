@@ -130,13 +130,18 @@ class ViewTvController extends Controller
         $ch = curl_init();
 
         $optArray = array(
-            CURLOPT_URL => env('APP_SERVER_URL').'/api/ssp/'.env('APP_SSP_URL'),
+            CURLOPT_URL => config('ssptvconfig.APP_SERVER_URL').'/api/ssp/'.config('ssptvconfig.APP_SSP_URL'),
             CURLOPT_RETURNTRANSFER => true
         );
+
+        
         
         curl_setopt_array($ch, $optArray); 
+        
         $result = curl_exec($ch);
+        
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      
         if($httpcode==200)
         {
             $processed = json_decode($result, true);
@@ -152,9 +157,10 @@ class ViewTvController extends Controller
             $weather = $processed['weather'];
             $newData = false;
 
-            dd(env('APP_SSP_URL'));
-            $getLocation = Location::where('name', env('APP_SSP_URL'))->first();
+            //dd(env('APP_SSP_URL'));
+            $getLocation = Location::where('name', config('ssptvconfig.APP_SSP_URL'))->first();
             
+
             if($getLocation->name != $location['name']) { $newData = true; }
             if($getLocation->street != $location['street']) { $newData = true; }
             if($getLocation->streetno != $location['streetno']) { $newData = true; }
@@ -283,11 +289,12 @@ class ViewTvController extends Controller
                 if($getCurrentSlide != null) {
                     $slideId = $getCurrentSlide->id;
                     if($getCurrentSlide->slide_content != $slide['slide_content']) {                    
-                        DB::table('slides')->insertGetId(
+                        DB::table('slides')->where('originalId', $slide['id'])->update(
                         [
                             'slide_content' => $slide['slide_content'],
                             'slide_title' => $slide['slide_title']
                         ]);
+                        $newSlideData = true;
                     }
                 } else {
                     $slideId = DB::table('slides')->insertGetId(
