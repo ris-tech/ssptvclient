@@ -19,3 +19,5 @@ yarn-error.log
 /public/images/uploads/fb
 /public/images/uploads
 /public/img/uploads/*.*
+/config/ssptvconfig.php
+.env
