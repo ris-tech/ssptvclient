@@ -192,6 +192,7 @@ class ViewTvController extends Controller
                     'details' => $location['details']
                 ]);
             }
+            $newFbSlideData = false;
             $newSlideData = false;
             $newSlideImageData = false;
             $erasedSlideImagesState = false;
@@ -235,12 +236,12 @@ class ViewTvController extends Controller
                 $getCurrentFbSlide = DB::table('slides')->where('originalId', $fbSlide['post_id'])->first();
                 if($getCurrentFbSlide != null) {
                     $fbSlideId = $getCurrentFbSlide->id;
-                    if($getCurrentFbSlide->slide_content != $fbSlide['message']) {
+                    if($getCurrentFbSlide->slide_content != $this->getContent($fbSlide['message'])) {
                         DB::table('slides')->where('originalId', $fbSlide['post_id'])->update([
                             'slide_title' => $this->first_sentence($fbSlide['message']),
                             'slide_content' => $this->getContent($fbSlide['message'])
                         ]);
-                        //$newSlideData = true;
+                        $newFbSlideData = true;
                     }                
                 } else {
                     $cntSlides = Slide::where('fb', true)->count();
@@ -262,7 +263,7 @@ class ViewTvController extends Controller
                             'fb' => true,
                             'sorting' => 0,
                         ]);
-                        $newSlideData = true;
+                        $newFbSlideData = true;
                     } elseif($cntSlides < 5) {
                         $fbSlideId = DB::table('slides')->insertGetId([
                             'originalId' => $fbSlide['post_id'],
@@ -274,7 +275,7 @@ class ViewTvController extends Controller
                             'fb' => true,
                             'sorting' => 0,
                         ]);
-                        $newSlideData = true;
+                        $newFbSlideData = true;
                     }
                 }
                 
@@ -403,6 +404,7 @@ class ViewTvController extends Controller
             
             if($newData) { $what = 'newData'; }
             if($newSlideData) { $what = 'newSlideData'; }
+            if($newFbSlideData) { $what = 'newFbSlideData'; }
             if($newSlideImageData) { $what = 'newSlideImageData'; }
             if($erasedSlidesState) { $what = 'erasedSlidesState'; }
             if($erasedSlideImagesState) { $what = 'erasedSlideImagesState'; }
@@ -413,7 +415,7 @@ class ViewTvController extends Controller
             }
 
 
-            if($newData || $newSlideData || $newSlideImageData || $erasedSlideImagesState) {
+            if($newData || $newSlideData || $newFbSlideData || $newSlideImageData || $erasedSlideImagesState) {
                 return response()->json(['status' => 'yes', 'what' => $what]);
             } else {
                 return response()->json(['status' => 'no']);
