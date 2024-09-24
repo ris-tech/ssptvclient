@@ -212,16 +212,18 @@ class ViewTvController extends Controller
             
             $slidesNotInDB = Slide::whereNotIn('originalId', $ids)->get();
 
-            foreach($slidesNotInDB as $slide) {
+            if($slidesNotInDB->isNotEmpty()) {
+                foreach($slidesNotInDB as $slide) {
+                    
+                    $slide_images = SlideImage::where('slide_id', $slide->id)->get();
                 
-                $slide_images = SlideImage::where('slide_id', $slide->id)->get();
-            
-                foreach($slide_images as $slide_image) {
-                    Storage::disk('images')->delete($slide_image->tv_img);
-                    SlideImage::where('slide_id', $slide->id)->delete();
+                    foreach($slide_images as $slide_image) {
+                        Storage::disk('images')->delete($slide_image->tv_img);
+                        SlideImage::where('slide_id', $slide->id)->delete();
+                    }
+                    Slide::where('id', $slide->id)->delete();
+                    $erasedSlidesState = true;
                 }
-                Slide::where('id', $slide->id)->delete();
-                $erasedSlidesState = true;
             }
 
 
