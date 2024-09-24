@@ -219,7 +219,7 @@ class ViewTvController extends Controller
                 
                     foreach($slide_images as $slide_image) {
                         Storage::disk('images')->delete($slide_image->tv_img);
-                        SlideImage::where('slide_id', $slide->id)->delete();
+                        SlideImage::find($slide_image->id)->delete();
                     }
                     Slide::where('id', $slide->id)->delete();
                     $erasedSlidesState = true;
