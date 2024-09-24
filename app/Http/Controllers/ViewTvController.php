@@ -240,7 +240,7 @@ class ViewTvController extends Controller
                             'slide_title' => $this->first_sentence($fbSlide['message']),
                             'slide_content' => $this->getContent($fbSlide['message'])
                         ]);
-                        $newSlideData = true;
+                        //$newSlideData = true;
                     }                
                 } else {
                     $cntSlides = Slide::where('fb', true)->count();
