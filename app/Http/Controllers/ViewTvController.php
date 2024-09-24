@@ -195,6 +195,7 @@ class ViewTvController extends Controller
             $newSlideData = false;
             $newSlideImageData = false;
             $erasedSlideImagesState = false;
+            $erasedSlidesState = false;
 
             $sorting = 0;
             $sortingImages = 0;
@@ -220,6 +221,7 @@ class ViewTvController extends Controller
                     SlideImage::where('slide_id', $slide->id)->delete();
                 }
                 Slide::where('id', $slide->id)->delete();
+                $erasedSlidesState = true;
             }
 
 
@@ -393,7 +395,7 @@ class ViewTvController extends Controller
                 ]);
             }
 
-            $erasedSlidesState = false;
+            
             
             
             if($newData) { $what = 'newData'; }
