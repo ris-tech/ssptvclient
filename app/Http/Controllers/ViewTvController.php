@@ -131,12 +131,8 @@ class ViewTvController extends Controller
 
         $optArray = array(
             CURLOPT_URL => config('ssptvconfig.APP_SERVER_URL').'/api/ssp/'.config('ssptvconfig.APP_SSP_URL'),
-            CURLOPT_CONNECTTIMEOUT => 60,
-            CURLOPT_TIMEOUT => 120,
             CURLOPT_RETURNTRANSFER => true
-        );
-
-        
+        );        
         
         curl_setopt_array($ch, $optArray); 
         
