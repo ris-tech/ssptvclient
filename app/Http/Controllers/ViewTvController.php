@@ -196,6 +196,7 @@ class ViewTvController extends Controller
             $newSlideImageData = false;
             $erasedSlideImagesState = false;
             $erasedSlidesState = false;
+            $erasedSlidesMsg = '';
 
             $sorting = 0;
             $sortingImages = 0;
@@ -223,6 +224,7 @@ class ViewTvController extends Controller
                     }
                     Slide::where('id', $slide->id)->delete();
                     $erasedSlidesState = true;
+                    $erasedSlidesMsg = $slide->id;
                 }
             }
 
@@ -406,7 +408,13 @@ class ViewTvController extends Controller
             if($erasedSlidesState) { $what = 'erasedSlidesState'; }
             if($erasedSlideImagesState) { $what = 'erasedSlideImagesState'; }
 
-            if($newData || $newSlideData || $newSlideImageData || $erasedSlidesState || $erasedSlideImagesState) {
+            if($erasedSlidesState) {
+                
+                return response()->json(['status' => 'yes', 'what' => $erasedSlidesMsg]);
+            }
+
+
+            if($newData || $newSlideData || $newSlideImageData || $erasedSlideImagesState) {
                 return response()->json(['status' => 'yes', 'what' => $what]);
             } else {
                 return response()->json(['status' => 'no']);
