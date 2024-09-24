@@ -196,14 +196,36 @@ class ViewTvController extends Controller
             $newSlideImageData = false;
             $erasedSlideImagesState = false;
 
-            
-
             $sorting = 0;
             $sortingImages = 0;
 
-        
+            $ids = [];
 
             foreach($fbSlides as $fbSlide) {
+                    $ids[] = $fbSlide['post_id'];
+            }
+
+            foreach($slides as $slide) {
+                $ids[] = $slide['id'];
+            }
+            
+            $slidesNotInDB = Slide::whereNotIn('originalId', $ids)->get();
+
+            foreach($slidesNotInDB as $slide) {
+                
+                $slide_images = SlideImage::where('slide_id', $slide->id)->get();
+            
+                foreach($slide_images as $slide_image) {
+                    Storage::disk('images')->delete($slide_image->tv_img);
+                    SlideImage::where('slide_id', $slide->id)->delete();
+                }
+                Slide::where('id', $slide->id)->delete();
+            }
+
+
+            foreach($fbSlides as $fbSlide) {
+
+
                 $getCurrentFbSlide = DB::table('slides')->where('originalId', $fbSlide['post_id'])->first();
                 if($getCurrentFbSlide != null) {
                     $fbSlideId = $getCurrentFbSlide->id;
@@ -212,6 +234,7 @@ class ViewTvController extends Controller
                             'slide_title' => $this->first_sentence($fbSlide['message']),
                             'slide_content' => $this->getContent($fbSlide['message'])
                         ]);
+                        $newSlideData = true;
                     }                
                 } else {
                     $cntSlides = Slide::where('fb', true)->count();
@@ -267,14 +290,14 @@ class ViewTvController extends Controller
                             $file_name = $fbPostImage['attachment']; 
                             
                             $imagePath = public_path('assets'.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'uploads').DIRECTORY_SEPARATOR;
-                        
+                            $newSlideImageData = true;
                             if (file_put_contents($imagePath.$file_name, file_get_contents($url))) 
                             { 
                                 Log::build([
                                     'driver' => 'single',
                                     'path' => storage_path('logs/getDataFromServer.log'),
                                 ])->info('File downloaded successfully: '.$file_name);
-                                $newSlideImageData = false;
+                                
                             } 
                             else
                             { 
