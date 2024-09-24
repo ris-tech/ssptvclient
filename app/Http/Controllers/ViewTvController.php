@@ -330,7 +330,6 @@ class ViewTvController extends Controller
                             'slide_content' => $slide['slide_content'],
                             'slide_title' => $slide['slide_title']
                         ]);
-                        $newSlideData = true;
                     }
                 } else {
                     $slideId = DB::table('slides')->insertGetId(
