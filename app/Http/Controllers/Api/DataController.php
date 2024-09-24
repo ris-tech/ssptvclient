@@ -41,7 +41,7 @@ class DataController extends Controller
             'image_url' => $image_url,
             'slides: ' => $slides,
             'weather' => $weather
-        ], 200);
+        ], 200); 
     }
 
     /**
