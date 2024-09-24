@@ -192,13 +192,11 @@ $(document).ready(function () {
                     }
                 }
             });
-        } else {
-            console.log('Is Offliney<');
         }
         
         setTimeout(() => {
             chkNewData();
-        }, 60000);0
+        }, 60000);
     }
 
     chkNewData();
