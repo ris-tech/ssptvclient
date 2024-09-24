@@ -42,6 +42,7 @@ class DataController extends Controller
             'slides: ' => $slides,
             'weather' => $weather
         ], 200);
+        //update
     }
 
     /**
