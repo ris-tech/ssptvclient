@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use App\Models\Slide;
 use App\Models\Weather;
