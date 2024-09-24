@@ -162,7 +162,7 @@ $(document).ready(function () {
         if(navigator.onLine) {
             $('.onlinebar').removeClass('bg-danger');
             $('.onlinebar').addClass('bg-success');
-        } else {
+        } else { 
             $('.onlinebar').removeClass('bg-success');
             $('.onlinebar').addClass('bg-danger'); 
         }
