@@ -161,8 +161,10 @@ class ViewTvController extends Controller
             $weather = $processed['weather'];
             $newData = false;
             if($needPull) {
-                exec("git pull");
-                return response()->json(['status' => 'yes', 'what' => 'git pull']);
+                exec('whoami', $output, $retval);
+                dd($output);
+                //exec("git pull");
+                //return response()->json(['status' => 'yes', 'what' => 'git pull']);
             }
 
             //dd(env('APP_SSP_URL'));
