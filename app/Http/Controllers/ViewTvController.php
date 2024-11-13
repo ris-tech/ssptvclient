@@ -162,9 +162,10 @@ class ViewTvController extends Controller
             $newData = false;
             if($needPull) {
                 exec('cd /var/www/html/ssptvclient && git pull 2>&1', $output);
-                dd($output);
-                //exec("git pull");
-                //return response()->json(['status' => 'yes', 'what' => 'git pull']);
+                
+                if($output[0] != 'Already up to date.') {
+                    return response()->json(['status' => 'yes', 'what' => 'git pull']);
+                }
             }
 
             //dd(env('APP_SSP_URL'));
