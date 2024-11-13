@@ -164,6 +164,10 @@ class ViewTvController extends Controller
                 exec('cd /var/www/html/ssptvclient && git pull 2>&1', $output);
                 
                 if($output[0] != 'Already up to date.') {
+                    Log::build([
+                        'driver' => 'single',
+                        'path' => storage_path('logs/git.log'),
+                    ])->info('Updated');
                     return response()->json(['status' => 'yes', 'what' => 'git pull']);
                 }
             }
