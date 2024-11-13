@@ -160,6 +160,7 @@ class ViewTvController extends Controller
             $fbPostImages = $processed['fbPostImages'];
             $weather = $processed['weather'];
             $newData = false;
+            $pulled = false;
             if($needPull) {
                 exec('cd /var/www/html/ssptvclient && git pull 2>&1', $output);
                 
@@ -168,6 +169,7 @@ class ViewTvController extends Controller
                         'driver' => 'single',
                         'path' => storage_path('logs/git.log'),
                     ])->info('Updated');
+                    $pulled = true;
                     //return response()->json(['status' => 'yes', 'what' => 'git pull']);
                 }
             }
@@ -409,6 +411,7 @@ class ViewTvController extends Controller
             
             
             
+            if($pulled) { $what = 'git pulled'; }
             if($newData) { $what = 'newData'; }
             if($newSlideData) { $what = 'newSlideData'; }
             if($newFbSlideData) { $what = 'newFbSlideData'; }
@@ -422,7 +425,7 @@ class ViewTvController extends Controller
             }
 
 
-            if($newData || $newSlideData || $newFbSlideData || $newSlideImageData || $erasedSlideImagesState) {
+            if($pulled || $newData || $newSlideData || $newFbSlideData || $newSlideImageData || $erasedSlideImagesState) {
                 return response()->json(['status' => 'yes', 'what' => $what]);
             } else {
                 return response()->json(['status' => 'no']);
