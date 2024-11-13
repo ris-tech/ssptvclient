@@ -168,7 +168,7 @@ class ViewTvController extends Controller
                         'driver' => 'single',
                         'path' => storage_path('logs/git.log'),
                     ])->info('Updated');
-                    return response()->json(['status' => 'yes', 'what' => 'git pull']);
+                    //return response()->json(['status' => 'yes', 'what' => 'git pull']);
                 }
             }
 
