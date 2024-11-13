@@ -39,8 +39,10 @@ class DataController extends Controller
         return response()->json([
             'url' => $url,
             'image_url' => $image_url,
+            'needPull' => false,
             'slides: ' => $slides,
-            'weather' => $weather
+            'weather' => $weather,
+            
         ], 200);
         //update
     }

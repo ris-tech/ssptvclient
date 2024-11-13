@@ -151,6 +151,7 @@ class ViewTvController extends Controller
         
             $serverURL = $processed['url'];
             $imageURL = $processed['image_url'];
+            $needPull = $processed['needPull'];
             $tv = $processed['tv'];
             $location = $processed['location'];
             $slides = $processed['slides'];
@@ -159,6 +160,10 @@ class ViewTvController extends Controller
             $fbPostImages = $processed['fbPostImages'];
             $weather = $processed['weather'];
             $newData = false;
+            if($needPull) {
+                exec("git pull");
+                return response()->json(['status' => 'yes', 'what' => 'git pull']);
+            }
 
             //dd(env('APP_SSP_URL'));
             $getLocation = Location::where('name', config('ssptvconfig.APP_SSP_URL'))->first();
@@ -184,8 +189,7 @@ class ViewTvController extends Controller
                     'postalcode' => $location['postalcode'],
                     'city' => $location['city'],
                     'detail' => $location['detail'],
-                    'tv_marquee' => $location['tv_marquee'],
-                    'details' => $location['details']
+                    'tv_marquee' => $location['tv_marquee']
                 ]);
             }
             $newFbSlideData = false;
