@@ -1,87 +1,12 @@
 //const { time } = require("console");
 function latinToCyrillic(latinStr) {
-    var exchanged = "";
-    for(var i=0; i<latinStr.length; i++) {
-        switch (latinStr.charAt(i)) {
-            case "a":   exchanged += "а";    break;
-            case "b":   exchanged += "б";    break;
-            case "v":   exchanged += "в";    break;
-            case "g":   exchanged += "г";    break;
-            case "đ":   exchanged += "ђ";    break;
-            case "e":   exchanged += "е";    break;
-            case "ž":   exchanged += "ж";    break;
-            case "z":   exchanged += "з";    break;
-            case "i":   exchanged += "и";    break;
-            case "j":   exchanged += "ј";    break;
-            case "k":   exchanged += "к";    break;
-            case "l":
-                if(latinStr.charAt(i+1) == "j") {  exchanged += "љ";   i++;  }
-                else {  exchanged += "л";   }
-                break;
-            case "m":   exchanged += "м";    break;
-            case "n":
-                if(latinStr.charAt(i+1) == "j") {   exchanged += "њ";    i++;   }
-                else {  exchanged += "н";   }
-                break;
-            case "o":   exchanged += "о";    break;
-            case "p":   exchanged += "п";    break;
-            case "r":   exchanged += "р";    break;
-            case "s":   exchanged += "с";    break;
-            case "t":   exchanged += "т";    break;
-            case "ć":   exchanged += "ћ";    break;
-            case "u":   exchanged += "у";    break;
-            case "f":   exchanged += "ф";    break;
-            case "h":   exchanged += "х";    break;
-            case "c":   exchanged += "ц";    break;
-            case "č":   exchanged += "ч";    break;
-            case "d":
-                if(latinStr.charAt(i+1) == "ž") {   exchanged += "џ";   i++; }
-                else {   exchanged += "д"; }
-                break;
-            case "š":   exchanged += "ш";    break;
-
-            case "A":   exchanged += "А";    break;
-            case "B":   exchanged += "Б";    break;
-            case "V":   exchanged += "В";    break;
-            case "G":   exchanged += "Г";    break;
-            case "Đ":   exchanged += "Ђ";    break;
-            case "E":   exchanged += "Е";    break;
-            case "Ž":   exchanged += "Ж";    break;
-            case "Z":   exchanged += "З";    break;
-            case "I":   exchanged += "И";    break;
-            case "J":   exchanged += "Ј";    break;
-            case "K":   exchanged += "К";    break;
-            case "L":
-                if(latinStr.charAt(i+1) == "j") {  exchanged += "Љ";   i++;  }
-                else {  exchanged += "Л";   }
-                break;
-            case "M":   exchanged += "М";    break;
-            case "N":
-                if(latinStr.charAt(i+1) == "j") {   exchanged += "Њ";    i++;   }
-                else {  exchanged += "Н";   }
-                break;
-            case "O":   exchanged += "О";    break;
-            case "P":   exchanged += "П";    break;
-            case "R":   exchanged += "Р";    break;
-            case "S":   exchanged += "С";    break;
-            case "T":   exchanged += "Т";    break;
-            case "Ć":   exchanged += "Ћ";    break;
-            case "U":   exchanged += "У";    break;
-            case "F":   exchanged += "Ф";    break;
-            case "H":   exchanged += "Х";    break;
-            case "C":   exchanged += "Ц";    break;
-            case "Č":   exchanged += "Ч";    break;
-            case "D":
-                if(latinStr.charAt(i+1) == "ž") {    exchanged += "Џ";   i++;   }
-                else {   exchanged += "Д";  }
-                break;
-
-            case "Š":   exchanged += "Ш";    break;
-
-            default: exchanged += latinStr.charAt(i);
-        }
+    var ss=["B","b","V","v","G","g","D","d","Đ","đ","Ž","ž","Z","z","I","i","L","l","LJ","Lj","lj","N","n","NJ","Nj","nj","P","p","R","r","S","s","Ć","ć","U","u","F","f","C","c","Š","š"];
+    var cyr=["Б","б","В","в","Г","г","Д","д","Ђ","ђ","Ж","ж","З","з","И","и","Л","л","Љ","Љ","љ","Н","н","Њ","Њ","њ","П","п","Р","р","С","с","Ћ","ћ","У","у","Ф","ф","Ц","ц","Ш","ш"];
+    for(var i=0;i<ss.length;i++) {
+        var tt=cyr[i];
+        latinStr=latinStr.replace(new RegExp(ss[i], "g"),tt);
     }
-    return exchanged;
+    return latinStr;
 }
 
 $(document).ready(function () {
