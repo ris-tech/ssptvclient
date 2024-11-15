@@ -50,10 +50,10 @@ $(document).ready(function () {
             crossDomain: true,
             dataType: 'json',
             success: function(result){   
-                $('.weather-desc').html(result.vremetext);  
+                $('.weather-desc').html(latinToCyrillic(result.vremetext));  
                 $('.weather-degreece').html(result.stepeni+' C°');  
                 $('.weather-icon').html('<img src="'+window.weatherIconPath+'/'+result.icon+'">');      
-                $('.weather-place').html(window.tvLocationName);
+                $('.weather-place').html(latinToCyrillic(window.tvLocationName));
             }
         });
         setTimeout(() => {
