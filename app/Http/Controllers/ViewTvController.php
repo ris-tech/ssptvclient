@@ -159,6 +159,7 @@ class ViewTvController extends Controller
             $fbSlides = $processed['fbSlides'];
             $fbPostImages = $processed['fbPostImages'];
             $weather = $processed['weather'];
+            $marquee = $processed['marquee'];
             $newData = false;
             $pulled = false;
             if($needPull) {
@@ -184,7 +185,7 @@ class ViewTvController extends Controller
             if($getLocation->postalcode != $location['postalcode']) { $newData = true; }
             if($getLocation->city != $location['city']) { $newData = true; }
             if($getLocation->detail != $location['detail']) { $newData = true; }
-            if($getLocation->tv_marquee != $location['tv_marquee']) { $newData = true; }
+            if($getLocation->tv_marquee != $marquee) { $newData = true; }
             if($getLocation->details != $location['details']) { $newData = true; }
 
             if($newData) {
@@ -198,7 +199,7 @@ class ViewTvController extends Controller
                     'postalcode' => $location['postalcode'],
                     'city' => $location['city'],
                     'detail' => $location['detail'],
-                    'tv_marquee' => $location['tv_marquee']
+                    'tv_marquee' => $marquee
                 ]);
             }
             $newFbSlideData = false;
