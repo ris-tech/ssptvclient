@@ -77,6 +77,7 @@ class getDataFromServer implements ShouldQueue
         $fbPostImages = $processed['fbPostImages'];
         $weather = $processed['weather'];
         $needPull = $processed['needPull'];
+        $marquee = $processed['marquee'];
         
 
         $addLocation = Location::updateOrInsert(
@@ -89,7 +90,7 @@ class getDataFromServer implements ShouldQueue
             'postalcode' => $location['postalcode'],
             'city' => $location['city'],
             'detail' => $location['detail'],
-            'tv_marquee' => $location['tv_marquee'],
+            'tv_marquee' => $marquee,
             'details' => $location['details']
         ]);
 
