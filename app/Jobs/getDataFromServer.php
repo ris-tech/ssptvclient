@@ -90,8 +90,7 @@ class getDataFromServer implements ShouldQueue
             'postalcode' => $location['postalcode'],
             'city' => $location['city'],
             'detail' => $location['detail'],
-            'tv_marquee' => $marquee,
-            'details' => $location['details']
+            'tv_marquee' => $marquee
         ]);
 
         $addTv = Tv::updateOrInsert(
